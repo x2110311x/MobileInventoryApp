@@ -4,7 +4,8 @@
   "description": "ACC inventory app (created for Individual Study)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +21,13 @@
   },
   "homepage": "https://github.com/x2110311x/MobileInventoryApp#readme",
   "dependencies": {
+    "@azure/msal-node": "^1.3.2",
     "body-parser": "^1.19.0",
     "consolidate": "^0.16.0",
     "cookie-parse": "^0.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mariadb": "^2.5.4",
+    "mysql": "^2.18.1",
     "path": "^0.12.7"
   }
 }

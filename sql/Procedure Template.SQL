@@ -1,0 +1,6 @@
+﻿DELIMITER $$
+CREATE OR REPLACE DEFINER='procadmin'@'localhost' PROCEDURE <name>(<arguments>)
+BEGIN
+	-- PROCEDURE CODE
+END $$
+DELIMITER ;

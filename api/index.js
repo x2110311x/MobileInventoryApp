@@ -2,6 +2,7 @@ var express = require('express');
 const fs = require('fs');
 var app = express();
 
+const config = require('./config.json')
 
 // Require any files in /calls automatically
 const requests = fs.readdirSync('./calls').filter(file => file.endsWith('.js'));
@@ -15,7 +16,7 @@ app.all('*', function (req, res) {
 });
 
 // start Express app
-var server = app.listen(8080, function () {
+var server = app.listen(config.SERVER_PORT, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("API listening at http://%s:%s", host, port)

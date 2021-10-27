@@ -1,0 +1,450 @@
+FORMAT: 1A
+
+# Inventory App
+Inventory App is a simple API to store Inventory transactions to the database
+
+# Group Companies
+
+## Companies Collection [/companies]
+This path allows you to retreive the list of companies or add a new company
+
+### List all companies [GET]
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "name": "Example Company",
+                "connectwiseid": "example",
+                "url": "/companies/1"
+            }
+        ]
+
+### Add a New Company [PUT]
+Add a new company to track in the system.
+It takes a JSON object containing the necessary data
++ Request (application/json)
+
+        {
+            "name": "Example Company",
+            "connectwiseid": "example"
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /companies/1
+
+    + Body
+
+            {
+                "id": 1,
+                "name": "Example Company",
+                "connectwiseid": "example",
+                "url": "/companies/1"
+            }
+
+## Indiviual Companies [/companies/{company_id}]
+This allows you to perform actions on an individual existing company
+### Get a Company [GET]
++ Parameters
+    + company_id (number)
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "Example Company",
+            "connectwiseid": "example",
+            "url": "/companies/1"
+        }
+
+### Update a Company  [POST]
+Allows you to update the name or ConnectWise ID of a company
++ Parameters
+    + company_id (number)
+
++ Request (application/json)
+    + Attributes
+        + name (string, optional) - New comapny name
+        + connectwiseid (string, optional) - New connectwiseid
+    
+    + Body
+    
+            {
+                "name": "Example Company",
+                "connectwiseid": "example"
+            }
+
++ Response 200
+
+## Users Collection [/companies/{company_id}/users]
+
+### Get all Users [GET]
++ Parameters
+    + company_id (number)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Smith",
+                "full_name": "John Smith",
+                "url": "/companies/1/users/1"
+            }
+        ]
+
+### Add a New User [PUT]
++ Parameters
+    + company_id (number)
+
++ Request (application/json)
+
+        {
+            "first_name": "John",
+            "last_name": "Smith",
+        }
+
++ Response 200 (application/json)
+    + Headers
+
+            Location: /companies/1/users/1
+            
+    + Body
+
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Smith",
+                "full_name": "John Smith",
+                "url": "/companies/1/users/1"
+            }
+
+## Indiviual User [/companies/{company_id}/users/{user_id}]
+
+### Get a User [GET]
++ Parameters
+    + company_id (number)
+    + user_id (number)
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "first_name": "John",
+            "last_name": "Smith",
+            "full_name": "John Smith",
+            "url": "/companies/1/users/1"
+        }
+
+### Update a User [POST]
++ Parameters
+    + company_id (number)
+    + user_id (number)
+
++ Request (application/json)
+    + Attributes
+        + first_name (string, optional)
+        + last_name (string, optional)
+    
+    + Body
+    
+            {
+                "first_name": "John",
+                "last_name": "Smith"
+            }
+
++ Response 200
+
+# Group Vendors
+
+## Vendors Collection [/vendors]
+
+### Get all vendors [GET]
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "name": "Example Vendor",
+                "account_number": "EX12345",
+                "url": "/vendors/1"
+            }
+        ]
+
+### Add a New Vendor [PUT]
++ Request (application/json)
+
+        {
+            "name": "Example Vendor",
+            "account_number": "EX12345"
+        }
+
++ Response 200 (application/json)
+    + Headers
+
+            Location: /vendors/1
+    
+    + Body
+
+            {
+                "id": 1,
+                "name": "Example Vendor",
+                "account_number": "EX12345",
+                "url": "/vendors/1"
+            }
+
+## Individual Vendor [/vendors/{vendor_id}]
+
+### Get a Vendor [GET]
++ Parameters
+    + vendor_id (number)
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "Example Vendor",
+            "account_number": "EX12345",
+            "url": "/vendors/1"
+        }
+
+### Update a Vendor [PUT]
++ Parameters
+    + vendor_id (number)
+
++ Request (application/json)
+    + Attributes
+        + name (string, optional)
+        + account_number (string, optional)
+        
+    + Body
+
+            {
+                "name": "Example Vendor",
+                "account_number": "EX12345"
+            }
+
++ Response 200
+
+# Group Orders
+
+## Orders Collection [/orders]
+
+### Get all Orders [GET]
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "order_number": "EX12345",
+                "vendor": 1,
+                "date_ordered": "2021-12-31",
+                "total_cost": 99.99,
+                "number_of_items": 5,
+                "url": "/orders/1"
+            }
+        ]
+
+
+### Record a New Order [PUT]
++ Request (application/json)
+
+        {
+            "order_number": "EX12345",
+            "vendor": 1,
+            "date_ordered": "2021-12-31",
+            "total_cost": 99.99
+        }
+
++ Response 200 (application/json)
+    + Headers
+
+            Location: /orders/1
+
+    + Body
+    
+            {
+                "id": 1,
+                "order_number": "EX12345",
+                "vendor": 1,
+                "date_ordered": "2021-12-31",
+                "total_cost": 99.99,
+                "number_of_items": 5,
+                "url": "/orders/1"
+            }
+
+## Individual Orders [/orders/{order_id}]
+
+### Get an Order [GET]
++ Parameters
+    + order_id (number)
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "order_number": "EX12345",
+            "vendor": 1,
+            "date_ordered": "2021-12-31",
+            "total_cost": 99.99,
+            "number_of_items": 5,
+            "url": "/orders/1"
+        }
+
+### Update an Order [POST]
++ Parameters
+    + order_id (number)
+
++ Request (application/json)
+    
+    + Attributes
+        + order_number (string, optional)
+        + vendor (string, optional)
+        + date_ordered (string, optional)
+        + total_cost (number, optional)
+        
+    + Body
+    
+            {
+                "order_number": "EX12345",
+                "vendor": 1,
+                "date_ordered": "2021-12-31",
+                "total_cost": 99.99
+            }
+
++ Response 200
+
+## Order Items [/orders/{order_id}/items]
+
+### Get all Items [GET]
++ Parameters
+    + order_id (number)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "description": "<Variable JSON Data>",
+                "received": True,
+                "checked_out": False,
+                "cost": 20.00,
+                "price": 30.00,
+                "serial_number": "XYZ12345ABC",
+                "typeid": 1,
+                "model": 1,
+                "url": "/items/1"
+            }
+        ]
+
+### Add an Item [PUT]
++ Parameters
+    + order_id (number)
+    
++ Request (application/json)
+    + Attributes
+        + description (string, optional)
+        + received (boolean, optional)
+            + Default: false
+        + checked_out (boolean, optional)
+            + Default: false
+        + cost (number)
+        + price (number)
+        + serial_number (string, optional)
+        + model (string)
+    
+    + Body
+
+            {
+                "description": "<Variable JSON Data>",
+                "cost": 20.00,
+                "price": 30.00,
+                "serial_number": "XYZ12345ABC",
+                "typeid": 1,
+                "model": 1,
+            }
+
++ Response 200 (application/json)
+    + Headers
+
+            Location: /items/1
+
+    + Body
+
+            {
+                "id": 1,
+                "description": "<Variable JSON Data>",
+                "received": True,
+                "checked_out": False,
+                "cost": 20.00,
+                "price": 30.00,
+                "serial_number": "XYZ12345ABC",
+                "typeid": 1,
+                "model": 1,
+                "url": "/items/1"
+            }
+
+
+# Group Inventory Items
+
+## Items Collection [/items/{?order_id}{?received}{?checked_out}]
+
+### Get all Items [GET]
++ Parameters
+    + order_id (number, optional)
+    + received (boolean, optional)
+        + Members
+            + True
+            + False
+        + Default: True
+    + checked_out (boolean, optional)
+        + Members
+            + True
+            + False
+        + Default: False
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "orderid": 1,
+            "description": "<Variable JSON Data>",
+            "received": True,
+            "checked_out": False,
+            "cost": 20.00,
+            "price": 30.00,
+            "serial_number": "XYZ12345ABC",
+            "typeid": 1,
+            "model": 1,
+            "url": "/items/1"
+        }
+
+### Individual Items [/items/{item_id}]
+
+## Update an Item [POST]
++ Request (application/json)
+    + Attributes
+        + description (string, optional)
+        + received: true (boolean, optional) - Whether the item has been received or not
+        + checked_out (boolean, optional)
+        + cost (number, optional)
+        + price (number, optional)
+        + serial_number (string, optional)
+        + model (string, optional)
+    + Body
+
+            {
+                "orderid": 1,
+                "description": "<Variable JSON Data>",
+                "received": True,
+                "checked_out": False,
+                "cost": 20.00,
+                "price": 30.00,
+                "serial_number": "XYZ12345ABC",
+                "typeid": 1,
+                "model": 1,
+            }
++ Response 200

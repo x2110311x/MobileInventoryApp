@@ -4,11 +4,11 @@ var app = express();
 
 const config = require('./config.json')
 
-// Require any files in /calls automatically
-const requests = fs.readdirSync('./calls').filter(file => file.endsWith('.js'));
-for (const file of requests) {
-    require(`./calls/${file}`)(app);
-}
+
+const api = require('./api');
+require('./login')(app);
+
+app.use("/api", api);
 
 // Handle unknown requests
 app.all('*', function (req, res) {

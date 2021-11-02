@@ -23,7 +23,7 @@ const pconfig = {
 const pca = new msal.ConfidentialClientApplication(pconfig);
 
 module.exports =
-function test(app) {
+function login(app) {
     app.get('/auth-redirect', (req, res) => {
         const tokenRequest = {
             code: req.query.code,

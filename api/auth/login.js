@@ -1,11 +1,11 @@
 const msal = require('@azure/msal-node');
 const config = require('../config.json');
 const SERVER_PORT = config.SERVER_PORT;
-const REDIRECT_URI = config.REDIRECT_URI;
+const REDIRECT_URI = config.auth.callbackURL;
 
 const pconfig = {
     auth: {
-        clientId: config.auth.clientId,
+        clientId: config.auth.clientID,
         authority: config.auth.authority,
         clientSecret: config.auth.clientSecret
     },
@@ -24,7 +24,7 @@ const pca = new msal.ConfidentialClientApplication(pconfig);
 
 module.exports =
 function login(app) {
-    app.get('/auth-redirect', (req, res) => {
+    app.get('/callback', (req, res) => {
         const tokenRequest = {
             code: req.query.code,
             scopes: ["user.read"],
@@ -33,7 +33,8 @@ function login(app) {
     
         pca.acquireTokenByCode(tokenRequest).then((response) => {
             console.log("\nResponse: \n:", response);
-            res.sendStatus(200);
+            data = {'accesstoken': response.accessToken, 'idtoken': response.idToken}
+            res.status(200).send(data);
         }).catch((error) => {
             console.log(error);
             res.status(500).send(error);

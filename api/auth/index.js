@@ -1,9 +1,9 @@
-var express = require('express')
+var express = require('express');
 var router = express.Router();
-var querystring = require('querystring');
 
 require('./login')(router);
-require('./tokeninfo')(router);
+router.use("/tokeninfo", require('./tokeninfo'));
+//require('./tokeninfo')(router);
 
 router.get('*', function (req, res) {
     res.status(404).send("Unknown request");

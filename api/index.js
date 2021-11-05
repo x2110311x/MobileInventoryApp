@@ -1,7 +1,13 @@
 var express = require('express');
+var http = require('http');
+var https = require('https');
 var passport = require('passport');
 var BearerStrategy = require("passport-azure-ad").BearerStrategy;
 const fs = require('fs');
+
+
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 var app = express();
 
 const config = require('./config.json')
@@ -12,13 +18,11 @@ var bearerStrategy = new BearerStrategy(config.passport,
     }
 );
 
-app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: config.sessionsecret, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 passport.use(bearerStrategy);
 
-// Enable CORS for * because this is a demo project
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
@@ -38,9 +42,10 @@ app.all('*', function (req, res) {
     res.status(404).send("404 - Unknown request");
 });
 
-// start Express app
-var server = app.listen(config.SERVER_PORT, function () {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("API listening at http://%s:%s", host, port)
- })
+
+var credentials = {key: privateKey, cert: certificate};
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(config.SERVER_PORT);
+httpsServer.listen(config.SERVER_PORT_HTTPS);

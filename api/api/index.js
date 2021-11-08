@@ -1,27 +1,20 @@
 const express = require('express')
-const router = express.Router();
 const passport = require('passport');
-const fetch = require('node-fetch');
 const config = require("../config.json");
 const db = require('../helpers/db');
-router.use(passport.authenticate("oauth-bearer", { session: false }));
 
-router.use(
-    function setUser(req, res, next){
-        fetch('https://graph.microsoft.com/v1.0/me', {
-        method: 'get',
-        headers: { 'authorization': `Bearer ${req.header('X-Auth')}` },
-        })
-        .then(response => response.json())
-        .then(json => req.uid = json.userPrincipalName.split('@')[0])
-        .then(() => next());
-    }
-);
+const router = express.Router();
+
+router.use(require("../helpers/checkHeaders.js"));
+router.use(passport.authenticate("oauth-bearer", { session: false }));
+router.use(require("../helpers/setUser.js"));
 
 require('./companies')(router);
 require('./items')(router);
 require('./orders')(router);
 require('./vendors')(router);
+require('./models')(router);
+require('./types')(router);
 
 router.get('/test', (req, res) => {
     let pass = req.header('X-Auth');

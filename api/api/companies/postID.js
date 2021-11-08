@@ -1,3 +1,5 @@
+const db = require("../../helpers/db");
+
 module.exports =
 function companies_postID(app) {
     app.post('/companies/:companyid', (req, res) => {

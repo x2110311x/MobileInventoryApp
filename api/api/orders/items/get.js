@@ -1,6 +1,27 @@
+const db = require("../../../helpers/db");
 module.exports =
 function orders_items_get(app) {
     app.get('/orders/:orderid/items', (req, res) => {
-        res.send(`Order: ${req.params.orderid}'s Items`);
+        let pass = req.header('X-Auth');
+        db(req.uid, pass, `SELECT * FROM items WHERE order_number = ${req.params.orderid}`)
+        .then((rows) =>{
+            for(row in rows){
+                rows[row]['url'] = `/items/${rows[row]['id']}`;
+                if (rows[row]['received'] == {"type":"Buffer","data":[49]}){
+                    rows[row]['received'] = true;
+                } else {
+                    rows[row]['received'] = false;                    
+                }
+                if (rows[row]['checked_out'] == {"type":"Buffer","data":[49]}){
+                    rows[row]['checked_out'] = true;
+                } else {
+                    rows[row]['checked_out'] = false;                    
+                }
+            }
+            res.json(rows);
+        }).catch((err)=> {
+            console.error(err);
+            res.status(500).send("Server Error");
+        });
     });
 }

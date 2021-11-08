@@ -1,3 +1,5 @@
+const db = require("../../../helpers/db");
+
 module.exports =
 function companies_users_put(app) {
     app.put('/companies/:companyid/users', (req, res) => {

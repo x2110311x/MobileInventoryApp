@@ -1,13 +1,13 @@
 const db = require("../../helpers/db");
 
 module.exports =
-function vendors_get(app) {
-    app.get('/vendors', (req, res) => {
+function types_get(app) {
+    app.get('/types', (req, res) => {
         let pass = req.header('X-Auth');
-        db(req.uid, pass, "SELECT * FROM vendors")
+        db(req.uid, pass, "SELECT * FROM itemtypes")
         .then((rows) =>{
             for(row in rows){
-                rows[row]['url'] = `/vendors/${rows[row]['id']}`;
+                rows[row]['url'] = `/types/${rows[row]['typeid']}`;
             }
             res.json(rows);
         }).catch((err)=> {

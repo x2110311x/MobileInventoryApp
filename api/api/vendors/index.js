@@ -1,6 +1,7 @@
 module.exports =
-function vendors(app) {
-    app.get('/vendors', (req, res) => {
-        res.send("Vendors");
-    });
+function orders(app) {
+    require('./get')(app);
+    require('./getID')(app);
+    require('./postID')(app);
+    require('./put')(app);
 }

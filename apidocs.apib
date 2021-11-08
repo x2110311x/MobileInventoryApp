@@ -448,3 +448,36 @@ Allows you to update the name or ConnectWise ID of a company
                 "model": 1,
             }
 + Response 200
+
+
+# Group Item Models
+
+## Models Collection [/models/]
+
+### Get all models [GET]
++ Response 200 (application/json)
+
+        [
+            {
+                "id":1,
+                "typeid":1,
+                "name":"example",
+                "url":"/models/1"
+            }
+        ]
+
+## Individual Models [/models/{model_id}]
+
+### Get a specific model [GET]
++ Request (application/json)
+    + Attributes
+        + modelid (number)
+
++ Response 200 (application/json)
+
+        {
+            "id":1,
+            "typeid":1,
+            "name":"example",
+            "url":"/models/1"
+        }

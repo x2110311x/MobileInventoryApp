@@ -1,204 +1,192 @@
-﻿CREATE OR REPLACE SCHEMA inventoryapp;
+--
+-- Table structure for table `companies`
+--
 
-CREATE TABLE inventoryapp.companies (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	name                 varchar(100)  NOT NULL    ,
-	connectwiseid        varchar(50)      ,
-	CONSTRAINT unq_name UNIQUE ( name )
- );
+DROP TABLE IF EXISTS `companies`;
+CREATE TABLE `companies` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'unique ID generated to identify the company',
+  `name` varchar(100) NOT NULL COMMENT 'Name of the company',
+  `connectwiseid` varchar(50) DEFAULT NULL COMMENT 'The company''s company ID inside Connectwise Manage',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='Contains a list of client companies';
 
-ALTER TABLE inventoryapp.companies COMMENT 'Contains a list of client companies';
+--
+-- Table structure for table `companyusers`
+--
 
-ALTER TABLE inventoryapp.companies MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'unique ID generated to identify the company';
+DROP TABLE IF EXISTS `companyusers`;
+CREATE TABLE `companyusers` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID to identify this user (automatically generated)',
+  `companyid` int(10) unsigned NOT NULL COMMENT 'The ID of the company this user belongs to',
+  `first_name` varchar(100) NOT NULL COMMENT 'The first name of the user',
+  `last_name` varchar(100) NOT NULL COMMENT 'The last name (surname) of the user',
+  `full_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_companyusers_companyid` (`companyid`),
+  CONSTRAINT `fk_companyusers_companyid` FOREIGN KEY (`companyid`) REFERENCES `companies` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Employees of clients, used to assign an item to a specific user';
 
-ALTER TABLE inventoryapp.companies MODIFY name varchar(100)  NOT NULL   COMMENT 'Name of the company';
+--
+-- Table structure for table `employees`
+--
 
-ALTER TABLE inventoryapp.companies MODIFY connectwiseid varchar(50)     COMMENT 'The company''s company ID inside Connectwise Manage';
+DROP TABLE IF EXISTS `employees`;
+CREATE TABLE `employees` (
+  `id` int(10) unsigned NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `full_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Used for audit trail';
 
-CREATE TABLE inventoryapp.companyusers (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	companyid            int UNSIGNED NOT NULL    ,
-	first_name           varchar(100)  NOT NULL    ,
-	last_name            varchar(100)  NOT NULL    ,
-	full_name            varchar(200)      ,
-	CONSTRAINT fk_companyusers_companyid FOREIGN KEY ( companyid ) REFERENCES inventoryapp.companies( id ) ON DELETE RESTRICT ON UPDATE CASCADE
- );
+--
+-- Table structure for table `inventorytransaction`
+--
 
-CREATE INDEX fk_companyusers_companyid ON inventoryapp.companyusers ( companyid );
+DROP TABLE IF EXISTS `inventorytransaction`;
+CREATE TABLE `inventorytransaction` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID of the transaction',
+  `type` int(10) unsigned NOT NULL COMMENT 'Transaction Type',
+  `date` datetime NOT NULL COMMENT 'Date and Time of the action performed',
+  `itemid` int(10) unsigned NOT NULL,
+  `companyid` int(10) unsigned DEFAULT NULL COMMENT 'Company the item was assigned to, if applicable',
+  `companyUser` int(10) unsigned DEFAULT NULL COMMENT 'Companyuser the item was assigned to, if applicable',
+  `doneBy` int(10) unsigned NOT NULL COMMENT 'The employee that performed the action',
+  PRIMARY KEY (`id`),
+  KEY `fk_transaction_company` (`companyid`),
+  KEY `fk_transaction_employee` (`doneBy`),
+  KEY `fk_transaction_item` (`itemid`),
+  KEY `fk_transaction_type` (`type`),
+  KEY `fk_transaction_user` (`companyUser`),
+  CONSTRAINT `fk_transaction_company` FOREIGN KEY (`companyid`) REFERENCES `companies` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_transaction_employee` FOREIGN KEY (`doneBy`) REFERENCES `employees` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_transaction_item` FOREIGN KEY (`itemid`) REFERENCES `items` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_transaction_type` FOREIGN KEY (`type`) REFERENCES `transactiontype` (`id`),
+  CONSTRAINT `fk_transaction_user` FOREIGN KEY (`companyUser`) REFERENCES `companyusers` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Used as an audit trail of transactions carried out in the database';
 
-ALTER TABLE inventoryapp.companyusers COMMENT 'Employees of clients, used to assign an item to a specific user';
+--
+-- Table structure for table `items`
+--
 
-ALTER TABLE inventoryapp.companyusers MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'ID to identify this user (automatically generated)';
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE `items` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID assigned to the item',
+  `order_number` int(10) unsigned NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `received` binary(1) NOT NULL DEFAULT '0',
+  `checked_out` binary(1) NOT NULL DEFAULT '0',
+  `cost` double unsigned NOT NULL COMMENT 'Our purchase cost',
+  `price` double unsigned NOT NULL COMMENT 'Price we are charing for it',
+  `serial_number` varchar(50) DEFAULT NULL,
+  `typeid` int(10) unsigned NOT NULL,
+  `model` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `serial_number` (`serial_number`),
+  KEY `fk_items_model` (`model`),
+  KEY `fk_items_ordernum` (`order_number`),
+  KEY `fk_items_typeid` (`typeid`),
+  CONSTRAINT `fk_items_model` FOREIGN KEY (`model`) REFERENCES `models` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_items_ordernum` FOREIGN KEY (`order_number`) REFERENCES `orders` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_items_typeid` FOREIGN KEY (`typeid`) REFERENCES `itemtypes` (`typeid`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Items in inventory, no matter the state (ordered, received, checked out, invoiced, etc)';
 
-ALTER TABLE inventoryapp.companyusers MODIFY companyid int UNSIGNED NOT NULL   COMMENT 'The ID of the company this user belongs to';
+--
+-- Table structure for table `itemtypes`
+--
 
-ALTER TABLE inventoryapp.companyusers MODIFY first_name varchar(100)  NOT NULL   COMMENT 'The first name of the user';
+DROP TABLE IF EXISTS `itemtypes`;
+CREATE TABLE `itemtypes` (
+  `typeid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`typeid`),
+  UNIQUE KEY `unq_itemtypes` (`type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Allows user definable item types to be marked';
 
-ALTER TABLE inventoryapp.companyusers MODIFY last_name varchar(100)  NOT NULL   COMMENT 'The last name (surname) of the user';
+--
+-- Table structure for table `models`
+--
 
-CREATE TABLE inventoryapp.employees (
-	id                   int UNSIGNED NOT NULL    PRIMARY KEY,
-	first_name           varchar(50)  NOT NULL    ,
-	last_name            varchar(50)  NOT NULL    ,
-	full_name            varchar(200)
- );
+DROP TABLE IF EXISTS `models`;
+CREATE TABLE `models` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID assigned to the model',
+  `typeid` int(10) unsigned NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_models_typeid` (`typeid`),
+  CONSTRAINT `fk_models_typeid` FOREIGN KEY (`typeid`) REFERENCES `itemtypes` (`typeid`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Item models';
 
-ALTER TABLE inventoryapp.employees COMMENT 'Used for audit trail';
+--
+-- Table structure for table `orders`
+--
 
-CREATE TABLE inventoryapp.itemtypes (
-	typeid               int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	type_name            varchar(100)  NOT NULL    ,
-	CONSTRAINT unq_itemtypes UNIQUE ( type_name )
- );
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE `orders` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID assigned to the order to maintain uniqueness across vendors',
+  `order_number` varchar(30) NOT NULL COMMENT 'Order number assigned by the vendor when the order was placed',
+  `vendor` int(10) unsigned NOT NULL,
+  `dateordered` date NOT NULL COMMENT 'Date and time the order was placed',
+  `total_cost` double NOT NULL COMMENT 'Order total',
+  `number_of_items` int(10) unsigned DEFAULT NULL COMMENT 'Amount of items in this order',
+  PRIMARY KEY (`id`),
+  KEY `fk_orders_vendor` (`vendor`),
+  CONSTRAINT `fk_orders_vendor` FOREIGN KEY (`vendor`) REFERENCES `vendors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Orders that have been placed';
 
-ALTER TABLE inventoryapp.itemtypes COMMENT 'Allows user definable item types to be marked';
+--
+-- Table structure for table `transactiontype`
+--
 
-CREATE TABLE inventoryapp.models (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	typeid               int UNSIGNED NOT NULL    ,
-	name                 varchar(50)  NOT NULL    ,
-	CONSTRAINT fk_models_typeid FOREIGN KEY ( typeid ) REFERENCES inventoryapp.itemtypes( typeid ) ON DELETE RESTRICT ON UPDATE CASCADE
- );
+DROP TABLE IF EXISTS `transactiontype`;
+CREATE TABLE `transactiontype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Defines transaction types, to allow flexible audit typing';
 
-CREATE INDEX fk_models_typeid ON inventoryapp.models ( typeid );
+--
+-- Table structure for table `vendors`
+--
 
-ALTER TABLE inventoryapp.models COMMENT 'Item models';
+DROP TABLE IF EXISTS `vendors`;
+CREATE TABLE `vendors` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique ID auto-assigned to the vendor',
+  `name` varchar(100) NOT NULL,
+  `account_number` varchar(50) DEFAULT NULL COMMENT 'Account number (if applicable) with the vendor',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Generates a list of vendors'; 
 
-ALTER TABLE inventoryapp.models MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'Unique ID assigned to the model';
-
-CREATE TABLE inventoryapp.transactiontype (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	name                 varchar(20)  NOT NULL    ,
-	CONSTRAINT unq_name UNIQUE ( name )
- );
-
-ALTER TABLE inventoryapp.transactiontype COMMENT 'Defines transaction types, to allow flexible audit typing';
-
-CREATE TABLE inventoryapp.vendors (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	name                 varchar(100)  NOT NULL    ,
-	account_number       varchar(50)
- );
-
-ALTER TABLE inventoryapp.vendors COMMENT 'Generates a list of vendors';
-
-ALTER TABLE inventoryapp.vendors MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'Unique ID auto-assigned to the vendor';
-
-ALTER TABLE inventoryapp.vendors MODIFY account_number varchar(50)     COMMENT 'Account number (if applicable) with the vendor';
-
-CREATE TABLE inventoryapp.orders (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	order_number         varchar(30)  NOT NULL    ,
-	vendor               int UNSIGNED NOT NULL    ,
-	dateordered          datetime  NOT NULL DEFAULT current_timestamp()   ,
-	total_cost           double  NOT NULL    ,
-	number_of_items      int UNSIGNED     ,
-	CONSTRAINT fk_orders_vendor FOREIGN KEY ( vendor ) REFERENCES inventoryapp.vendors( id ) ON DELETE RESTRICT ON UPDATE RESTRICT
- );
-
-CREATE INDEX fk_orders_vendor ON inventoryapp.orders ( vendor );
-
-ALTER TABLE inventoryapp.orders COMMENT 'Orders that have been placed';
-
-ALTER TABLE inventoryapp.orders MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'Unique ID assigned to the order to maintain uniqueness across vendors';
-
-ALTER TABLE inventoryapp.orders MODIFY order_number varchar(30)  NOT NULL   COMMENT 'Order number assigned by the vendor when the order was placed';
-
-ALTER TABLE inventoryapp.orders MODIFY dateordered datetime  NOT NULL DEFAULT current_timestamp()  COMMENT 'Date and time the order was placed';
-
-ALTER TABLE inventoryapp.orders MODIFY total_cost double  NOT NULL   COMMENT 'Order total';
-
-ALTER TABLE inventoryapp.orders MODIFY number_of_items int UNSIGNED    COMMENT 'Amount of items in this order';
-
-CREATE TABLE inventoryapp.items (
-	id                   int UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	order_number         int UNSIGNED NOT NULL    ,
-	description          longtext      ,
-	received             binary(1)  NOT NULL DEFAULT '0'   ,
-	checked_out          binary(1)  NOT NULL DEFAULT '0'   ,
-	cost                 double UNSIGNED NOT NULL    ,
-	price                double UNSIGNED NOT NULL    ,
-	serial_number        varchar(50)      ,
-	typeid               int UNSIGNED NOT NULL    ,
-	model                int UNSIGNED NOT NULL    ,
-	CONSTRAINT serial_number UNIQUE ( serial_number ) ,
-	CONSTRAINT fk_items_typeid FOREIGN KEY ( typeid ) REFERENCES inventoryapp.itemtypes( typeid ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_items_model FOREIGN KEY ( model ) REFERENCES inventoryapp.models( id ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_items_ordernum FOREIGN KEY ( order_number ) REFERENCES inventoryapp.orders( id ) ON DELETE RESTRICT ON UPDATE CASCADE
- );
-
-CREATE INDEX fk_items_model ON inventoryapp.items ( model );
-
-CREATE INDEX fk_items_ordernum ON inventoryapp.items ( order_number );
-
-CREATE INDEX fk_items_typeid ON inventoryapp.items ( typeid );
-
-ALTER TABLE inventoryapp.items COMMENT 'Items in inventory, no matter the state (ordered, received, checked out, invoiced, etc)';
-
-ALTER TABLE inventoryapp.items MODIFY id int UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'Unique ID assigned to the item';
-
-ALTER TABLE inventoryapp.items MODIFY cost double UNSIGNED NOT NULL   COMMENT 'Our purchase cost';
-
-ALTER TABLE inventoryapp.items MODIFY price double UNSIGNED NOT NULL   COMMENT 'Price we are charing for it';
-
-CREATE TABLE inventoryapp.inventorytransaction (
-	id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
-	`type`               int UNSIGNED NOT NULL    ,
-	`date`               datetime  NOT NULL    ,
-	itemid               int UNSIGNED NOT NULL    ,
-	companyid            int UNSIGNED     ,
-	`companyUser`        int UNSIGNED     ,
-	`doneBy`             int UNSIGNED NOT NULL    ,
-	CONSTRAINT fk_transaction_company FOREIGN KEY ( companyid ) REFERENCES inventoryapp.companies( id ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_transaction_user FOREIGN KEY ( `companyUser` ) REFERENCES inventoryapp.companyusers( id ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_transaction_employee FOREIGN KEY ( `doneBy` ) REFERENCES inventoryapp.employees( id ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_transaction_item FOREIGN KEY ( itemid ) REFERENCES inventoryapp.items( id ) ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT fk_transaction_type FOREIGN KEY ( `type` ) REFERENCES inventoryapp.transactiontype( id ) ON DELETE RESTRICT ON UPDATE RESTRICT
- );
-
-CREATE INDEX fk_transaction_company ON inventoryapp.inventorytransaction ( companyid );
-
-CREATE INDEX fk_transaction_employee ON inventoryapp.inventorytransaction ( `doneBy` );
-
-CREATE INDEX fk_transaction_item ON inventoryapp.inventorytransaction ( itemid );
-
-CREATE INDEX fk_transaction_type ON inventoryapp.inventorytransaction ( `type` );
-
-CREATE INDEX fk_transaction_user ON inventoryapp.inventorytransaction ( `companyUser` );
-
-ALTER TABLE inventoryapp.inventorytransaction COMMENT 'Used as an audit trail of transactions carried out in the database';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY id bigint UNSIGNED NOT NULL  AUTO_INCREMENT COMMENT 'Unique ID of the transaction';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY `type` int UNSIGNED NOT NULL   COMMENT 'Transaction Type';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY `date` datetime  NOT NULL   COMMENT 'Date and Time of the action performed';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY companyid int UNSIGNED    COMMENT 'Company the item was assigned to, if applicable';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY `companyUser` int UNSIGNED    COMMENT 'Companyuser the item was assigned to, if applicable';
-
-ALTER TABLE inventoryapp.inventorytransaction MODIFY `doneBy` int UNSIGNED NOT NULL   COMMENT 'The employee that performed the action';
-
-CREATE  PROCEDURE `AddCompany`(company_name VARCHAR(100), connectwise_id VARCHAR(50))
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddCompany`(company_name VARCHAR(100), connectwise_id VARCHAR(50))
 BEGIN
 	IF connectwise_id IS NULL THEN
 		INSERT INTO companies(name) VALUES(company_name);
 	ELSE
 		INSERT INTO companies(name,connectwiseid) VALUES(company_name, connectwise_id);
 	END IF;
-END
+END ;;
+DELIMITER ;
+ 
 
-CREATE  PROCEDURE `AddCompanyUser`(
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddCompanyUser`(
 	company_id INT,
 	firstname VARCHAR(100),
  	lastname VARCHAR(100)
 )
 BEGIN
 	INSERT INTO companyusers(companyid,first_name,last_name) VALUES(company_id,firstname,lastname);
-END
+END ;;
+DELIMITER ;
+ 
 
-CREATE  PROCEDURE `AddItem`(
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddItem`(
 	oNumber VARCHAR(30),
 	iDesc JSON,
 	iCost DOUBLE,
@@ -213,43 +201,51 @@ BEGIN
 		INSERT INTO items(order_number,description,cost,price,typeid,model) VALUES(oNumber,iDesc,iCost,iPrice,iTypeID,iModel);
 		UPDATE orders SET number_of_items = number_of_items + 1;
 	COMMIT;
-END
+END ;;
+DELIMITER ;
+ 
 
-CREATE  PROCEDURE `AddItemType`(
-	tName VARCHAR(100)
-)
-BEGIN
-	INSERT INTO itemtypes(type_name) VALUES(tName);
-END
-
-CREATE  PROCEDURE `AddModel`(
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddModel`(
 	tID INT,
 	mName VARCHAR(50)
 )
 BEGIN
 	INSERT INTO models(typeid,name) VALUES(tID,mName);
-END
+END ;;
+DELIMITER ;
+ 
 
-CREATE  PROCEDURE `AddOrder`(
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddOrder`(
 	oNumber VARCHAR(30),
 	oVendor INT,
-	oDate datetime,
+	oDate DATE,
 	oCost DOUBLE
 )
 BEGIN
 	INSERT INTO orders(order_number,vendor,dateordered,total_cost,number_of_items) VALUES(oNumber,oVendor,oDate,oCost,0);
-END
+END ;;
+DELIMITER ;
+ 
 
-CREATE  PROCEDURE `AddVendor`(vendor_name VARCHAR(100), account_number VARCHAR(50))
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `AddVendor`(vendor_name VARCHAR(100), account_number VARCHAR(50))
 BEGIN
 	IF account_number IS NULL THEN
 		INSERT INTO vendors(name) VALUES(vendor_name);
 	ELSE
 		INSERT INTO vendors(name,account_number) VALUES(vendor_name, account_number);
 	END IF;
-END
-
-CREATE  PROCEDURE `CheckOrder`(
+END ;;
+DELIMITER ;
+ 
+ 
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `CheckOrder`(
 	IN oID INT,
 	OUT validity BINARY,
 	OUT msg VARCHAR(50)
@@ -269,11 +265,14 @@ BEGIN
 		SET validity = 0;
 		SET msg = 'Order Valid';
 	END IF;
-END
-
-CREATE  PROCEDURE `CreateTransactionType`(
+END ;;
+DELIMITER ;
+  
+DELIMITER ;;
+CREATE DEFINER=`procadmin`@`localhost` PROCEDURE `CreateTransactionType`(
 	tName VARCHAR(20)
 )
 BEGIN
 	INSERT INTO transactiontype(name) VALUES(tname);
-END
+END ;;
+DELIMITER ;

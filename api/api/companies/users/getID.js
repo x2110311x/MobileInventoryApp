@@ -1,14 +1,25 @@
 /*jshint esversion: 6 */
-const db = require('../../../helpers/db');
+const queries = require('../../../helpers/db');
 
 module.exports =
 function companies_user_getID(app) {
 	app.get('/companies/:companyid/users/:userid', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, `SELECT * FROM companyusers WHERE companyid = ${req.params.companyid} AND id=${req.params.userid}`)
+		let companyid = parseInt(req.params.companyid);
+		if (isNaN(companyid)){
+			res.sendStatus(400);
+			return;
+		} 
+		let userid = parseInt(req.params.userid);
+		if (isNaN(userid)) {
+			res.sendStatus(400);
+			return;
+		} 
+		queries.companies.users.getID(user, pass, companyid, userid)
 			.then((rows) =>{
 				let row = rows[0];
-				row.url = `/companies/${req.params.companyid}/users/${row.id}`;
+				row.url = `/companies/${companyid}/users/${userid}`;
 				res.json(row);
 			}).catch((err)=> {
 				console.error(err);

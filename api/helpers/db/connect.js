@@ -1,8 +1,9 @@
 /*jshint esversion: 6 */
-const mariadb = require('mariadb');
-const config = require('../config.json');
 
-module.exports = function query(user, pass, query){
+const mariadb = require('mariadb');
+const config = require('../../config.json');
+
+module.exports = function(user, pass){
 	return new Promise((resolve, reject) => {
 		mariadb.createConnection({
 			user: user,
@@ -10,12 +11,7 @@ module.exports = function query(user, pass, query){
 			database: config.db.MYSQL_DB
 		})
 			.then(conn => {
-				conn.query(query)
-					.then((rows) =>{
-						return resolve(rows);
-					}).catch((err)=> {
-						return reject(err);
-					});
+				return resolve(conn);
 			}).catch((err)=> {
 				return reject(err);
 			});

@@ -1,15 +1,14 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function companies_get(app) {
 	app.get('/companies', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, 'SELECT * FROM companies')
+		queries.companies.getAll(user, pass)
 			.then((rows) =>{
-				// eslint-disable-next-line no-undef
 				for(var row in rows){
-					// eslint-disable-next-line no-undef
 					rows[row].url = `/companies/${rows[row].id}`;
 				}
 				res.json(rows);

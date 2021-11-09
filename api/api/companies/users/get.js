@@ -13,8 +13,8 @@ function companies_user_get(app) {
 		} 
 		queries.companies.users.getAll(user, pass, companyid)
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/companies/${companyid}/users/${rows[row].id}`;
+				for(var row of rows){
+					row.url = `/companies/${companyid}/users/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

@@ -7,8 +7,8 @@ function models_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM models')
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/models/${rows[row].id}`;
+				for(var row of rows){
+					row.url = `/models/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

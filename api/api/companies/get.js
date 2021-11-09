@@ -8,8 +8,8 @@ function companies_get(app) {
 		let pass = req.header('X-Auth');
 		queries.companies.getAll(user, pass)
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/companies/${rows[row].id}`;
+				for(var row of rows){
+					row.url = `/companies/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

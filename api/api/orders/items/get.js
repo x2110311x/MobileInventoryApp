@@ -6,17 +6,17 @@ function orders_items_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, `SELECT * FROM items WHERE order_number = ${req.params.orderid}`)
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/items/${rows[row].id}`;
-					if (rows[row].received == {'type':'Buffer','data':[49]}){
-						rows[row].received = true;
+				for(var row of rows){
+					row.url = `/items/${row.id}`;
+					if (row.received == {'type':'Buffer','data':[49]}){
+						row.received = true;
 					} else {
-						rows[row].received = false;                    
+						row.received = false;                    
 					}
-					if (rows[row].checked_out == {'type':'Buffer','data':[49]}){
-						rows[row].checked_out = true;
+					if (row.checked_out == {'type':'Buffer','data':[49]}){
+						row.checked_out = true;
 					} else {
-						rows[row].checked_out = false;                    
+						row.checked_out = false;                    
 					}
 				}
 				res.json(rows);

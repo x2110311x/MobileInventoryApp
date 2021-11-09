@@ -1,5 +1,4 @@
 /*jshint esversion: 6 */
-// eslint-disable-next-line no-unused-vars
 const queries = require('../../helpers/db');
 
 module.exports =

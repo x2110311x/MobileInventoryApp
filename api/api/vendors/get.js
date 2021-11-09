@@ -7,8 +7,8 @@ function vendors_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM vendors')
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/vendors/${rows[row].id}`;
+				for(var row of rows){
+					row.url = `/vendors/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

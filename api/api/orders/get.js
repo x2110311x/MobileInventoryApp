@@ -7,8 +7,8 @@ function orders_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM orders')
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/orders/${rows[row].id}`;
+				for(var row of rows){
+					row.url = `/orders/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

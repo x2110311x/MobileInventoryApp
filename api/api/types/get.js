@@ -7,8 +7,8 @@ function types_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM itemtypes')
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/types/${rows[row].typeid}`;
+				for(var row of rows){
+					row.url = `/types/${row.typeid}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

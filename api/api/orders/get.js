@@ -9,7 +9,7 @@ function orders_get(app) {
 				// eslint-disable-next-line no-undef
 				for(row in rows){
 					// eslint-disable-next-line no-undef
-					rows[row]['url'] = `/orders/${rows[row]['id']}`;
+					rows[row].url = `/orders/${rows[row].id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

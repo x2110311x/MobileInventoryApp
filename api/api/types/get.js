@@ -9,7 +9,7 @@ function types_get(app) {
 				// eslint-disable-next-line no-undef
 				for(row in rows){
 					// eslint-disable-next-line no-undef
-					rows[row]['url'] = `/types/${rows[row]['typeid']}`;
+					rows[row].url = `/types/${rows[row].typeid}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

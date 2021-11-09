@@ -7,7 +7,7 @@ function companies_getID(app) {
 		db(req.uid, pass, `SELECT * FROM companies WHERE id = ${req.params.companyid}`)
 			.then((rows) =>{
 				let row = rows[0];
-				row['url'] = `/companies/${row['id']}`;
+				row.url = `/companies/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {
 				console.error(err);

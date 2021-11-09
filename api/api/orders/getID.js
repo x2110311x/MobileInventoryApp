@@ -7,7 +7,7 @@ function orders_getID(app) {
 		db(req.uid, pass, `SELECT * FROM orders WHERE id = ${req.params.orderid}`)
 			.then((rows) =>{
 				let row = rows[0];
-				row['url'] = `/orders/${row['id']}`;
+				row.url = `/orders/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {
 				console.error(err);

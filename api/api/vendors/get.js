@@ -9,7 +9,7 @@ function vendors_get(app) {
 				// eslint-disable-next-line no-undef
 				for(row in rows){
 					// eslint-disable-next-line no-undef
-					rows[row]['url'] = `/vendors/${rows[row]['id']}`;
+					rows[row].url = `/vendors/${rows[row].id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

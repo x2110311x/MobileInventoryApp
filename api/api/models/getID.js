@@ -7,7 +7,7 @@ function models_getID(app) {
         db(req.uid, pass, `SELECT * FROM models WHERE id = ${req.params.modelid}`)
         .then((rows) =>{
             let row = rows[0];
-            row['url'] = `/models/${row['id']}`;
+            row.url = `/models/${row.id}`;
             res.json(row);
         }).catch((err)=> {
             console.error(err);

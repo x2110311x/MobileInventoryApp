@@ -7,7 +7,7 @@ function companies_user_getID(app) {
 		db(req.uid, pass, `SELECT * FROM companyusers WHERE companyid = ${req.params.companyid} AND id=${req.params.userid}`)
 			.then((rows) =>{
 				let row = rows[0];
-				row['url'] = `/companies/${req.params.companyid}/users/${row['id']}`;
+				row.url = `/companies/${req.params.companyid}/users/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {
 				console.error(err);

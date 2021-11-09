@@ -7,9 +7,7 @@ function vendors_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM vendors')
 			.then((rows) =>{
-				// eslint-disable-next-line no-undef
 				for(var row in rows){
-					// eslint-disable-next-line no-undef
 					rows[row].url = `/vendors/${rows[row].id}`;
 				}
 				res.json(rows);

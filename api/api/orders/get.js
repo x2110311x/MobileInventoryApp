@@ -7,9 +7,7 @@ function orders_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM orders')
 			.then((rows) =>{
-				// eslint-disable-next-line no-undef
 				for(var row in rows){
-					// eslint-disable-next-line no-undef
 					rows[row].url = `/orders/${rows[row].id}`;
 				}
 				res.json(rows);

@@ -1,5 +1,4 @@
 /*jshint esversion: 6 */
-/* eslint-disable no-undef */
 const db = require('../../helpers/db');
 
 module.exports =

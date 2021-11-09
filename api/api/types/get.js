@@ -7,9 +7,7 @@ function types_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM itemtypes')
 			.then((rows) =>{
-				// eslint-disable-next-line no-undef
 				for(var row in rows){
-					// eslint-disable-next-line no-undef
 					rows[row].url = `/types/${rows[row].typeid}`;
 				}
 				res.json(rows);

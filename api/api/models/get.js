@@ -7,9 +7,7 @@ function models_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, 'SELECT * FROM models')
 			.then((rows) =>{
-				// eslint-disable-next-line no-undef
 				for(var row in rows){
-					// eslint-disable-next-line no-undef
 					rows[row].url = `/models/${rows[row].id}`;
 				}
 				res.json(rows);

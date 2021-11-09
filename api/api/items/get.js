@@ -1,24 +1,15 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function items_get(app) {
 	app.get('/items', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, 'SELECT * FROM items')
+		queries.items.getAll(user, pass)
 			.then((rows) =>{
-				for(var row in rows){
-					rows[row].url = `/items/${rows[row].id}`;
-					if (rows[row].received == {'type':'Buffer','data':[49]}){
-						rows[row].received = true;
-					} else {
-						rows[row].received = false;                    
-					}
-					if (rows[row].checked_out == {'type':'Buffer','data':[49]}){
-						rows[row].checked_out = true;
-					} else {
-						rows[row].checked_out = false;                    
-					}
+				for(var row of rows){
+					row.url = `/items/${row.id}`;
 				}
 				res.json(rows);
 			}).catch((err)=> {

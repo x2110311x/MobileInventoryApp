@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const msal = require('@azure/msal-node');
 const config = require('../config.json');
 const REDIRECT_URI = config.auth.callbackURL;

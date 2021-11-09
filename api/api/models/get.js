@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const db = require('../../helpers/db');
 
 module.exports =
@@ -7,7 +8,7 @@ function models_get(app) {
 		db(req.uid, pass, 'SELECT * FROM models')
 			.then((rows) =>{
 				// eslint-disable-next-line no-undef
-				for(row in rows){
+				for(var row in rows){
 					// eslint-disable-next-line no-undef
 					rows[row].url = `/models/${rows[row].id}`;
 				}

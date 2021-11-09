@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 module.exports = 
 function checkheaders(req, res, next){
 	if (!req.header('X-Auth')){

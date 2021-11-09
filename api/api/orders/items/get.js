@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 /* eslint-disable no-undef */
 const db = require('../../../helpers/db');
 module.exports =
@@ -6,7 +7,7 @@ function orders_items_get(app) {
 		let pass = req.header('X-Auth');
 		db(req.uid, pass, `SELECT * FROM items WHERE order_number = ${req.params.orderid}`)
 			.then((rows) =>{
-				for(row in rows){
+				for(var row in rows){
 					rows[row].url = `/items/${rows[row].id}`;
 					if (rows[row].received == {'type':'Buffer','data':[49]}){
 						rows[row].received = true;

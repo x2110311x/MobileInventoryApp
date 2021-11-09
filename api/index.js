@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 var express = require('express');
 var http = require('http');
 var https = require('https');

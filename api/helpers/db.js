@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const mariadb = require('mariadb');
 const config = require('../config.json');
 

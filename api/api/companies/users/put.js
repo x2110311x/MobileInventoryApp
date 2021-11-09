@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 // eslint-disable-next-line no-unused-vars
 const db = require('../../../helpers/db');
 

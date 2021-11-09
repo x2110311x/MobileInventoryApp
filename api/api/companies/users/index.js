@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 module.exports =
 function users(app) {
 	require('./get')(app);

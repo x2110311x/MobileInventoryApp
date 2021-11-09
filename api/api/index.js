@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const express = require('express');
 const passport = require('passport');
 const db = require('../helpers/db');

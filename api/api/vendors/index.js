@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 module.exports =
 function orders(app) {
 	require('./get')(app);

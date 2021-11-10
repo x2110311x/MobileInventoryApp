@@ -18,8 +18,11 @@ function companies_user_getID(app) {
 			return;
 		}
 		queries.companies.users.getID(user, pass, companyid, userid)
-			.then((rows) =>{
-				let row = rows[0];
+			.then((row) =>{
+				if(row === undefined){
+					res.status(404).send(`Unknown user: ${userid}`);
+					return;
+				}
 				row.url = `/companies/${companyid}/users/${userid}`;
 				res.json(row);
 			}).catch((err)=> {

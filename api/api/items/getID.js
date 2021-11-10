@@ -14,7 +14,7 @@ function items_getID(app) {
 		}
 		queries.items.getID(user, pass, itemid)
 			.then((row) =>{
-				if(row[0] === undefined){
+				if(row === undefined){
 					res.status(404).send(`Unknown Item: ${itemid}`);
 					return;
 				}

@@ -25,7 +25,7 @@ module.exports = {
 					let query = 'SELECT * FROM companyusers WHERE companyid = ' + conn.escape(companyid) +  ' AND id = ' + conn.escape(id);
 					conn.query(query)
 						.then((rows) =>{
-							return resolve(rows);
+							return resolve(rows[0]);
 						}).catch((err)=> {
 							return reject(err);
 						});

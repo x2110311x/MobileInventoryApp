@@ -13,8 +13,11 @@ function companies_getID(app) {
 			return;
 		}
 		queries.companies.getID(user, pass, companyid)
-			.then((rows) =>{
-				let row = rows[0];
+			.then((row) =>{
+				if(row === undefined){
+					res.status(404).send(`Unknown Company: ${companyid}`);
+					return;
+				}
 				row.url = `/companies/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {

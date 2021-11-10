@@ -1,9 +1,18 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function types_put(app) {
 	app.put('/types/', (req, res) => {
-		res.send('Types put');
+		let user = req.uid;
+		let pass = req.header('X-Auth');
+		let name = req.params.name;
+		queries.types.add(user, pass, name)
+			.then(() => {
+				res.sendStatus(200);
+			}).catch((err)=> {
+				console.error(err);
+				res.status(500).send('Server Error');
+			});	
 	});
 };

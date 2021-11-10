@@ -1,11 +1,12 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function types_get(app) {
 	app.get('/types', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, 'SELECT * FROM itemtypes')
+		queries.types.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){
 					row.url = `/types/${row.typeid}`;

@@ -2,5 +2,6 @@
 module.exports = {
 	companies: require('./companies'),
 	items: require('./items'),
-	models: require('./models')
+	models: require('./models'),
+	types: require('./types')
 };

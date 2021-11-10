@@ -1,14 +1,20 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
 
 module.exports =
 function types_getID(app) {
 	app.get('/types/:typeid', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, `SELECT * FROM itemtypes WHERE typeid = ${req.params.typeid}`)
-			.then((rows) =>{
-				let row = rows[0];
-				row.url = `/types/${row.typeid}`;
+		let typeid = typecheck.checkInt(req.params.typeid);
+		queries.types.getID(user, pass, typeid)
+			.then((row) => {
+				if (row === undefined){
+					res.status(404).send(`Unknown type: ${typeid}`);
+					return;
+				}
+				row.url = `/types/${typeid}`;
 				res.json(row);
 			}).catch((err)=> {
 				console.error(err);

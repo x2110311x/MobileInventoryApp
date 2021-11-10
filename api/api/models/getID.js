@@ -1,13 +1,19 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
 
 module.exports =
 function models_getID(app) {
 	app.get('/models/:modelid', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, `SELECT * FROM models WHERE id = ${req.params.modelid}`)
-			.then((rows) =>{
-				let row = rows[0];
+		let modelid = typecheck.checkInt(req.params.modelid);
+		queries.models.getID(user, pass, modelid)
+			.then((row) =>{
+				if(row === undefined){
+					res.status(404).send(`Unknown model ${modelid}`);
+					return;
+				}
 				row.url = `/models/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {

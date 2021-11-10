@@ -11,8 +11,12 @@ function items_getID(app) {
 			res.sendStatus(400);
 			return;
 		} 		
-		queries.items.getAll(user, pass, itemid)
+		queries.items.getID(user, pass, itemid)
 			.then((rows) =>{
+				if(rows[0] === undefined){
+					res.status(404).send(`Unknown Item: ${itemid}`);
+					return;
+				}
 				let row = rows[0];
 				row.url = `/items/${row.id}`;
 				res.json(row);

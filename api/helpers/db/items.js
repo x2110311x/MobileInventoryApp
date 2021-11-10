@@ -33,7 +33,7 @@ module.exports = {
 					let query = 'SELECT * FROM items WHERE id = ' + conn.escape(id);
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
-							return resolve(rows);
+							return resolve(rows[0]);
 						}).catch((err)=> {
 							return reject(err);
 						});

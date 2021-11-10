@@ -1,6 +1,8 @@
 /*jshint esversion: 6 */
 // eslint-disable-next-line no-unused-vars
 const queries = require('../../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
+
 
 module.exports =
 function companies_user_postID(app) {
@@ -9,17 +11,17 @@ function companies_user_postID(app) {
 		let pass = req.header('X-Auth');
 		let first_name = req.body.first_name;
 		let last_name = req.body.last_name;
-		let companyid = parseInt(req.params.companyid);
-		if (isNaN(companyid)){
+		let companyid = typecheck.checkInt(req.params.companyid);
+		if(!companyid || companyid === undefined){
 			res.sendStatus(400);
 			return;
-		} 
-		let userid = parseInt(req.params.userid);
-		if (isNaN(userid)) {
+		}
+		let userid = typecheck.checkInt(req.params.userid);
+		if(!userid || userid === undefined){
 			res.sendStatus(400);
 			return;
-		} 
-		queries.companies.user.update(user, pass, companyid, userid, first_name, last_name)
+		}
+		queries.companies.users.update(user, pass, companyid, userid, first_name, last_name)
 			.then(() =>{
 				res.sendStatus(200);
 			}).catch(err => {

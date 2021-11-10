@@ -1,6 +1,7 @@
 /*jshint esversion: 6 */
 // eslint-disable-next-line no-unused-vars
 const queries = require('../../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
 
 module.exports =
 function companies_users_put(app) {
@@ -9,12 +10,12 @@ function companies_users_put(app) {
 		let pass = req.header('X-Auth');
 		let first_name = req.body.first_name;
 		let last_name = req.body.last_name;
-		let companyid = parseInt(req.params.companyid);
-		if (isNaN(companyid)){
+		let companyid = typecheck.checkInt(req.params.companyid);
+		if(!companyid || companyid === undefined){
 			res.sendStatus(400);
 			return;
-		} 
-		queries.companies.user.add(user, pass, companyid, first_name, last_name)
+		}
+		queries.companies.users.add(user, pass, companyid, first_name, last_name)
 			.then(() =>{
 				res.sendStatus(200);
 			}).catch(err => {

@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 const queries = require('../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
 
 module.exports =
 function companies_postID(app) {
@@ -8,11 +9,11 @@ function companies_postID(app) {
 		let pass = req.header('X-Auth');
 		let name = req.body.name;
 		let connectwiseid = req.body.connectwiseid;
-		let companyid = parseInt(req.params.companyid);
-		if (isNaN(companyid)){
+		let companyid = typecheck.checkInt(req.params.companyid);
+		if(!companyid || companyid === undefined){
 			res.sendStatus(400);
 			return;
-		} 
+		}
 		queries.companies.update(user, pass, companyid, name, connectwiseid)
 			.then(() =>{
 				res.sendStatus(200);

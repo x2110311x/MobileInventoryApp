@@ -40,7 +40,7 @@ app.use('/auth', login);
 
 // Handle unknown requests
 app.all('*', function (req, res) {
-	res.status(404).send('404 - Unknown request');
+	res.sendStatus(404);
 });
 
 

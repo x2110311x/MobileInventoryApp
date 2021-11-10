@@ -9,5 +9,6 @@ function setUser(req, res, next){
 	})
 		.then(response => response.json())
 		.then(json => req.uid = json.userPrincipalName.split('@')[0])
-		.then(() => next());
+		.then(() => next())
+		.catch(() => res.sendStatus(401));
 };

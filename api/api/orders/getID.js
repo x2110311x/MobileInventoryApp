@@ -1,13 +1,15 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
+const typecheck = require('../../helpers/typecheck');
 
 module.exports =
 function orders_getID(app) {
 	app.get('/orders/:orderid', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, `SELECT * FROM orders WHERE id = ${req.params.orderid}`)
-			.then((rows) =>{
-				let row = rows[0];
+		let orderid = typecheck.checkInt(req.params.orderid);
+		queries.orders.getID(user, pass, orderid)
+			.then((row) =>{
 				row.url = `/orders/${row.id}`;
 				res.json(row);
 			}).catch((err)=> {

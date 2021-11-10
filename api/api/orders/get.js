@@ -1,11 +1,12 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function orders_get(app) {
 	app.get('/orders', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, 'SELECT * FROM orders')
+		queries.orders.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){
 					row.url = `/orders/${row.id}`;

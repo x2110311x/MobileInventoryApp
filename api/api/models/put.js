@@ -7,8 +7,8 @@ function models_put(app) {
 	app.put('/models/', (req, res) => {
 		let user = req.uid;
 		let pass = req.header('X-Auth');
-		let typeid = typecheck.checkInt(req.params.typeid);
-		let name = req.params.name;
+		let typeid = typecheck.checkInt(req.body.typeid);
+		let name = req.body.name;
 		queries.models.add(user, pass, name, typeid)
 			.then(() =>{
 				res.sendStatus(200);

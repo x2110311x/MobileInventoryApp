@@ -6,7 +6,7 @@ function types_put(app) {
 	app.put('/types/', (req, res) => {
 		let user = req.uid;
 		let pass = req.header('X-Auth');
-		let name = req.params.name;
+		let name = req.body.name;
 		queries.types.add(user, pass, name)
 			.then(() => {
 				res.sendStatus(200);

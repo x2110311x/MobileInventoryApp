@@ -8,8 +8,8 @@ function models_post(app) {
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let modelid = typecheck.checkInt(req.params.modelid);
-		let typeid = typecheck.checkInt(req.params.typeid);
-		let name = req.params.name;
+		let typeid = typecheck.checkInt(req.body.typeid);
+		let name = req.body.name;
 		queries.models.update(user, pass, modelid, name, typeid)
 			.then(() =>{
 				res.sendStatus(200);

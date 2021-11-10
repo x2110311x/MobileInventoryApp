@@ -8,8 +8,8 @@ function types_post(app) {
 	app.post('/types/:typeid', (req, res) => {
 		let user = req.uid;
 		let pass = req.header('X-Auth');
-		let typeid = typecheck.checkInt(req.params.typeid);
-		let name = req.params.name;
+		let typeid = typecheck.checkInt(req.body.typeid);
+		let name = req.body.name;
 		queries.types.update(user, pass, typeid, name)
 			.then(() => {
 				res.sendStatus(200);

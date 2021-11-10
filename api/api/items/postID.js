@@ -18,11 +18,7 @@ function items_post(app) {
 		let id = typecheck.checkInt(req.params.id);
 
 		for(var param of [orderNumber, cost, price, typeID, model, checked_in, received, id]){
-			if(!param){
-				res.sendStatus(400);
-				return;
-			}
-			if(param === undefined){
+			if(!param || param === undefined){
 				res.sendStatus(400);
 				return;
 			}

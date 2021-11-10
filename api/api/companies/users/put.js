@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 // eslint-disable-next-line no-unused-vars
 const queries = require('../../../helpers/db');
-const typecheck = require('../../helpers/typecheck');
+const typecheck = require('../../../helpers/typecheck');
 
 module.exports =
 function companies_users_put(app) {

@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 const queries = require('../../../helpers/db');
-const typecheck = require('../../helpers/typecheck');
+const typecheck = require('../../../helpers/typecheck');
 
 module.exports =
 function companies_user_get(app) {

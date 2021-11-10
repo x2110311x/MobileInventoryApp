@@ -11,7 +11,7 @@ module.exports = {
 	},
 	checkInt: function(num){
 		if(!num) return;
-		let retVar = parseFloat(num);
+		let retVar = parseInt(num);
 		if(isNaN(retVar)){
 			return;
 		} else {

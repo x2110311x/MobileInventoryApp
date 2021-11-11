@@ -1,11 +1,12 @@
 /*jshint esversion: 6 */
-const db = require('../../helpers/db');
+const queries = require('../../helpers/db');
 
 module.exports =
 function vendors_get(app) {
 	app.get('/vendors', (req, res) => {
+		let user = req.uid;
 		let pass = req.header('X-Auth');
-		db(req.uid, pass, 'SELECT * FROM vendors')
+		queries.vendors.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){
 					row.url = `/vendors/${row.id}`;

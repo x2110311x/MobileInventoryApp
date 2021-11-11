@@ -4,5 +4,6 @@ module.exports = {
 	items: require('./items'),
 	models: require('./models'),
 	types: require('./types'),
-	orders: require('./orders')
+	orders: require('./orders'),
+	vendors: require('./vendors')
 };

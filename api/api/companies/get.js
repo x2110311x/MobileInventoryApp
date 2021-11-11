@@ -11,7 +11,7 @@ function companies_get(app) {
 				for(var row of rows){
 					row.url = `/companies/${row.id}`;
 				}
-				res.json(rows);
+				res.status(200).json(rows);
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

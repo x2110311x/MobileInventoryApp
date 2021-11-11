@@ -18,6 +18,5 @@ function orders_put(app) {
 				console.error(err);
 				res.status(500).send('Server Error');
 			});
-		res.send('Orders');
 	});
 };

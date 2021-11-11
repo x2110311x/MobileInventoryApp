@@ -19,7 +19,7 @@ function types_getID(app) {
 					return;
 				}
 				row.url = `/types/${typeid}`;
-				res.json(row);
+				res.status(200).json(row);
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

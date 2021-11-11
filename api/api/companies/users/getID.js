@@ -24,7 +24,7 @@ function companies_user_getID(app) {
 					return;
 				}
 				row.url = `/companies/${companyid}/users/${userid}`;
-				res.json(row);
+				res.status(200).json(row);
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

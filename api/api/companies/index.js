@@ -7,4 +7,5 @@ function companies(app) {
 	require('./postID')(app);
 	require('./put')(app);
 	require('./users')(app);
+	require('./invalidmethods')(app);
 };

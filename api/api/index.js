@@ -1,8 +1,6 @@
 /*jshint esversion: 6 */
 const express = require('express');
 const passport = require('passport');
-const db = require('../helpers/db');
-
 const router = express.Router();
 
 router.use(passport.authenticate('oauth-bearer', { session: false }));

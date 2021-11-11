@@ -38,7 +38,6 @@ const login = require('./auth');
 app.use('/api', api);
 app.use('/auth', login);
 
-// Handle unknown requests
 app.all('*', function (req, res) {
 	res.sendStatus(404);
 });

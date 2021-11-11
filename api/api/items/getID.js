@@ -5,7 +5,15 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function items_getID(app) {
 	app.get('/items/:itemid', (req, res) => {
-		// #swagger.summary = 'Get a specific item'
+		/*
+		#swagger.summary = 'Get a specific item'
+		#swagger.parameters['itemid'] = {
+			in: 'path',
+			description: 'ID of the item to lookup',
+			required: true,
+			type: 'integer'
+		} 
+		*/
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let itemid = typecheck.checkInt(req.params.itemid);

@@ -5,7 +5,25 @@ const typecheck = require('../../../helpers/typecheck');
 module.exports =
 function companies_users_put(app) {
 	app.put('/companies/:companyid/users', (req, res) => {
-		// #swagger.summary = 'Add a new user to a specific company'
+		/*
+		#swagger.summary = 'Add a new user to a specific company'
+		#swagger.parameters['first_name'] = {
+			in: 'body',
+			description: 'First name of the user',
+			required: true,
+		}
+		#swagger.parameters['last_name'] = {
+			in: 'body',
+			description: 'Last name of the user',
+			required: true,
+		} 
+		#swagger.parameters['companyid'] = {
+			in: 'path',
+			description: 'ID of the company to lookup to add the user',
+			required: true,
+			type: 'integer'
+		} 
+		*/
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let first_name = req.body.first_name;

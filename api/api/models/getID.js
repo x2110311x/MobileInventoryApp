@@ -5,7 +5,15 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function models_getID(app) {
 	app.get('/models/:modelid', (req, res) => {
-		// #swagger.summary = 'Get a specfic model'
+		/*
+		#swagger.summary = 'Get a specfic model'
+		#swagger.parameters['modelid'] = {
+			in: 'path',
+			description: 'ID of the model to lookup',
+			required: true,
+			type: 'integer'
+		} 
+		*/
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let modelid = typecheck.checkInt(req.params.modelid);

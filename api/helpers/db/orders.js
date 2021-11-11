@@ -65,5 +65,6 @@ module.exports = {
 					return reject(err);
 				});
 		});
-	}
+	},
+	items: require('./orderitems')
 };

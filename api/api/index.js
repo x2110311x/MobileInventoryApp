@@ -16,8 +16,8 @@ require('./vendors')(router);
 require('./models')(router);
 require('./types')(router);
 
-router.get('*', function (req, res) {
-	res.status(403).send('Unknown request');
+router.all('*', function (req, res) {
+	res.sendStatus(404);
 });
 
 module.exports = router;

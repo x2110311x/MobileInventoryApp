@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function orders_get(app) {
 	app.get('/orders', (req, res) => {
+		// #swagger.summary = 'Get all orders'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		queries.orders.getAll(user, pass)

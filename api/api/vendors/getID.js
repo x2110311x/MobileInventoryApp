@@ -5,6 +5,7 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function vendors_getID(app) {
 	app.get('/vendors/:vendorid', (req, res) => {
+		// #swagger.summary = 'Get a specific vendor'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let vendorid = typecheck.checkInt(req.params.vendorid);

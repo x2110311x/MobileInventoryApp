@@ -5,6 +5,7 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function models_post(app) {
 	app.post('/models/:modelid', (req, res) => {
+		// #swagger.summary = 'Update a specific model'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let modelid = typecheck.checkInt(req.params.modelid);

@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function companies_put(app) {
 	app.put('/companies', (req, res) => {
+		// #swagger.summary = 'Add a new company'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let name = req.body.name;

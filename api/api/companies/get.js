@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function companies_get(app) {
 	app.get('/companies', (req, res) => {
+		// #swagger.summary = 'Get all companies'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		queries.companies.getAll(user, pass)

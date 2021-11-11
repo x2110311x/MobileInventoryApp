@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function models_get(app) {
 	app.get('/models', (req, res) => {
+		// #swagger.summary = 'Get all models'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		queries.models.getAll(user, pass, 'SELECT * FROM models')

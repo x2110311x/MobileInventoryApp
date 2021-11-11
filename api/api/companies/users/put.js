@@ -5,6 +5,7 @@ const typecheck = require('../../../helpers/typecheck');
 module.exports =
 function companies_users_put(app) {
 	app.put('/companies/:companyid/users', (req, res) => {
+		// #swagger.summary = 'Add a new user to a specific company'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let first_name = req.body.first_name;

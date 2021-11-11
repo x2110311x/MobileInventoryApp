@@ -5,6 +5,7 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function orders_put(app) {
 	app.put('/orders', (req, res) => {
+		// #swagger.summary = 'Add a new order'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let orderNumber = req.body.orderNumber;

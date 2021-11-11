@@ -6,6 +6,7 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function types_post(app) {
 	app.post('/types/:typeid', (req, res) => {
+		// #swagger.summary = 'Update a specific item type'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let typeid = typecheck.checkInt(req.body.typeid);

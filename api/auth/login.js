@@ -25,6 +25,7 @@ const pca = new msal.ConfidentialClientApplication(pconfig);
 module.exports =
 function login(app) {
 	app.get('/callback', (req, res) => {
+		// #swagger.summary = 'Handle Azure AD OAUTH2.0 callback'
 		const tokenRequest = {
 			code: req.query.code,
 			scopes: ['user.read'],
@@ -41,6 +42,7 @@ function login(app) {
 		});
 	});
 	app.get('/login', (req, res) => {
+		// #swagger.summary = 'Redirect to OAUTH2.0 sign in'
 		const authCodeUrlParameters = {
 			scopes: ['user.read'],
 			redirectUri: REDIRECT_URI,

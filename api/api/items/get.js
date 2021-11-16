@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function items_get(app) {
 	app.get('/items', (req, res) => {
+		// #swagger.summary = 'Get all items'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		queries.items.getAll(user, pass)
@@ -11,7 +12,7 @@ function items_get(app) {
 				for(var row of rows){
 					row.url = `/items/${row.id}`;
 				}
-				res.json(rows);
+				res.status(200).json(rows);
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

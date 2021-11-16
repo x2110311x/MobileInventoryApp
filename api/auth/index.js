@@ -6,7 +6,7 @@ require('./login')(router);
 require('./getGroups.js')(router);
 router.use('/tokencheck', require('./tokencheck'));
 
-router.get('*', function (req, res) {
+router.all('*', function (req, res) {
 	res.status(404).send('Unknown request');
 });
 

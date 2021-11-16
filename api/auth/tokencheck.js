@@ -7,6 +7,7 @@ var basicAuth = require('express-basic-auth');
 router.use(basicAuth( { authorizer: myAuthorizer, authorizeAsync: true } ));
 
 router.get('/', function (req, res){
+	// #swagger.summary = 'Validate a token for a specific user. Used for database authentication'
 	console.log('Pass');
 	res.sendStatus(200);
 });

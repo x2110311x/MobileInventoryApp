@@ -4,10 +4,11 @@ const typecheck = require('../../../helpers/typecheck');
 
 module.exports =
 function items_get(app) {
-	app.put('/items', (req, res) => {
+	app.put('/orders/:orderid/items', (req, res) => {
+		// #swagger.summary = 'Add a new item to an order'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
-		let orderNumber = req.body.orderNumber;
+		let orderNumber = req.params.orderNumber;
 		let desc = req.body.desc;
 		let cost = typecheck.checkFloat(req.body.cost);
 		let price = typecheck.checkFloat(req.body.price);

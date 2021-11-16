@@ -6,4 +6,5 @@ function users(app) {
 	require('./getID')(app);
 	require('./postID')(app);
 	require('./put')(app);
+	require('./invalidmethods')(app);
 };

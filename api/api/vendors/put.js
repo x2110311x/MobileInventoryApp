@@ -6,6 +6,7 @@ const typecheck = require('../../helpers/typecheck');
 module.exports =
 function vendors_put(app) {
 	app.put('/vendors', (req, res) => {
+		// #swagger.summary = 'Add a new vendor'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let name = req.body.name;

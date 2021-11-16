@@ -6,4 +6,5 @@ function orders(app) {
 	require('./postID')(app);
 	require('./put')(app);
 	require('./items')(app);
+	require('./invalidmethods')(app);
 };

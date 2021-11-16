@@ -4,6 +4,7 @@ const queries = require('../../helpers/db');
 module.exports =
 function types_put(app) {
 	app.put('/types/', (req, res) => {
+		// #swagger.summary = 'Add a new item type'
 		let user = req.uid;
 		let pass = req.header('X-Auth');
 		let name = req.body.name;

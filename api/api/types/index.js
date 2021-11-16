@@ -5,4 +5,5 @@ function items(app) {
 	require('./getID')(app);
 	require('./put')(app);
 	require('./post')(app);
+	require('./invalidmethods')(app);
 };

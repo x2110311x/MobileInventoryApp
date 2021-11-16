@@ -8,6 +8,7 @@ const router = express.Router();
 router.use(passport.authenticate('oauth-bearer', { session: false }));
 router.use(require('../helpers/checkHeaders.js'));
 router.use(require('../helpers/setUser.js'));
+router.use(require('../helpers/setGroup.js'));
 
 require('./companies')(router);
 require('./items')(router);

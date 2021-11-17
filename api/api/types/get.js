@@ -6,7 +6,7 @@ function types_get(app) {
 	app.get('/types', (req, res) => {
 		// #swagger.summary = 'Get all item types'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		queries.types.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){

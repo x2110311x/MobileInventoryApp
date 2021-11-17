@@ -7,7 +7,7 @@ function orders_put(app) {
 	app.put('/orders', (req, res) => {
 		// #swagger.summary = 'Add a new order'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let orderNumber = req.body.orderNumber;
 		let vendorID = typecheck.checkInt(req.body.vendorid);
 		let orderdate = typecheck.checkInt(req.body.date);

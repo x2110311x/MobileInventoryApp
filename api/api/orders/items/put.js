@@ -7,7 +7,7 @@ function items_get(app) {
 	app.put('/orders/:orderid/items', (req, res) => {
 		// #swagger.summary = 'Add a new item to an order'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let orderNumber = req.params.orderNumber;
 		let desc = req.body.desc;
 		let cost = typecheck.checkFloat(req.body.cost);

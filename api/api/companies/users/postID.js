@@ -32,7 +32,7 @@ function companies_user_postID(app) {
 		} 
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let first_name = req.body.first_name;
 		let last_name = req.body.last_name;
 		/* */

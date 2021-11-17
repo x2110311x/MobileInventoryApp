@@ -67,7 +67,7 @@ function items_post(app) {
 		let model = typecheck.checkInt(req.body.model);
 		let typeID = typecheck.checkInt(req.body.typeID);
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let orderNumber = req.body.orderNumber;
 		let desc = req.body.desc;
 		let cost = typecheck.checkFloat(req.body.cost);

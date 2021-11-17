@@ -25,7 +25,7 @@ function companies_postID(app) {
 		}
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let name = req.body.name;
 
 		let connectwiseid = req.body.connectwiseid;

@@ -7,7 +7,7 @@ function vendors_postID(app) {
 	app.post('/vendors/:vendorid', (req, res) => {
 		// #swagger.summary = 'Update a vendor'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let name = req.body.name;
 		let accNumber = req.body.account_number;
 		let vendorid = typecheck(req.params.vendorid);

@@ -1,14 +1,13 @@
 /*jshint esversion: 6 */
 const getAADGroups = require('../helpers/getGroups');
-const { header } = require('express-validator');
 
 module.exports = 
 function getGroups(app){
 	app.get('/getGroups',[
-		header('X-Auth').isString().isLength({ min: 1000 }).trim().escape()
+		require('../helpers/checkHeaders'),
+		require('../helpers/setAuthHeader')
 	], (req, res) => {
-		let token = req.header('X-Auth');
-		console.log(token);
+		let token = req.auth;
 		getAADGroups(token)
 			.then((groups) =>{
 				res.send(groups);

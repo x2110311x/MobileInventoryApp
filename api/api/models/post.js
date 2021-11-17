@@ -27,7 +27,7 @@ function models_post(app) {
 		}
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let name = req.body.name;
 		let typeid = typecheck.checkInt(req.body.typeid);
 		let modelid = typecheck.checkInt(req.params.modelid);

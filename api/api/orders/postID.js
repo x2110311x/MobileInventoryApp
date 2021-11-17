@@ -7,7 +7,7 @@ function orders_postID(app) {
 	app.post('/orders/:orderid', (req, res) => {
 		// #swagger.summary = 'Update a specific order'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let orderNumber = req.params.orderNumber;
 		let orderid = typecheck.checkInt(req.params.orderid);
 		let vendorID = typecheck.checkInt(req.body.vendorid);

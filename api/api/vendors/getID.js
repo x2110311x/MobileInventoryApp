@@ -7,7 +7,7 @@ function vendors_getID(app) {
 	app.get('/vendors/:vendorid', (req, res) => {
 		// #swagger.summary = 'Get a specific vendor'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let vendorid = typecheck.checkInt(req.params.vendorid);
 		if(!vendorid || vendorid === undefined){
 			res.sendStatus(400);

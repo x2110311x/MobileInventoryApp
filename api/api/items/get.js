@@ -6,7 +6,7 @@ function items_get(app) {
 	app.get('/items', (req, res) => {
 		// #swagger.summary = 'Get all items'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		queries.items.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){

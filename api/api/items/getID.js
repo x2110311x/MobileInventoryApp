@@ -15,7 +15,7 @@ function items_getID(app) {
 		} 
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let itemid = typecheck.checkInt(req.params.itemid);
 		if(!itemid || itemid === undefined){
 			res.sendStatus(400);

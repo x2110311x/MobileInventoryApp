@@ -3,7 +3,7 @@ const getAADGroups = require('../helpers/getGroups');
 
 module.exports = 
 function(req, res, next) {
-	let token = req.header('X-Auth');
+	let token = req.auth;
 	getAADGroups(token)
 		.then((groups) =>{
 			req.primaryGroup = groups.topGroup;

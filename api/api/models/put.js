@@ -21,7 +21,7 @@ function models_put(app) {
 		}
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let name = req.body.name;
 		let typeid = typecheck.checkInt(req.body.typeid);
 		queries.models.add(user, pass, name, typeid)

@@ -15,7 +15,7 @@ function companies_getID(app) {
 		}
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let companyid = typecheck.checkInt(req.params.companyid);
 		if(!companyid || companyid === undefined){
 			res.sendStatus(400);

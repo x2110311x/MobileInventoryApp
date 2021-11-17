@@ -6,7 +6,7 @@ function companies_get(app) {
 	app.get('/companies', (req, res) => {
 		// #swagger.summary = 'Get all companies'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		queries.companies.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){

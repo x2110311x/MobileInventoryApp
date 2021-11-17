@@ -8,7 +8,7 @@ function types_post(app) {
 	app.post('/types/:typeid', (req, res) => {
 		// #swagger.summary = 'Update a specific item type'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let typeid = typecheck.checkInt(req.body.typeid);
 		let name = req.body.name;
 		queries.types.update(user, pass, typeid, name)

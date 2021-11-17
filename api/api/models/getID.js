@@ -15,7 +15,7 @@ function models_getID(app) {
 		} 
 		*/
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let modelid = typecheck.checkInt(req.params.modelid);
 		if(!modelid || modelid === undefined){
 			res.sendStatus(400);

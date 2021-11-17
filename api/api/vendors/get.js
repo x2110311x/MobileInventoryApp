@@ -6,7 +6,7 @@ function vendors_get(app) {
 	app.get('/vendors', (req, res) => {
 		// #swagger.summary = 'Get all vendors'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		queries.vendors.getAll(user, pass)
 			.then((rows) =>{
 				for(var row of rows){

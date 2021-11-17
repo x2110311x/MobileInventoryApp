@@ -30,7 +30,6 @@ function getAADGroups(token){
 					'topGroup': topName,
 					'allGroups': allGroups
 				};
-				console.log(rData);
 				resolve(rData);
 			}).catch((err) => {
 				reject(err);

@@ -7,7 +7,7 @@ function orders_getID(app) {
 	app.get('/orders/:orderid', (req, res) => {
 		// #swagger.summary = 'Get a specific order'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let orderid = typecheck.checkInt(req.params.orderid);
 		if(!orderid || orderid === undefined){
 			res.sendStatus(400);

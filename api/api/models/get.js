@@ -6,7 +6,7 @@ function models_get(app) {
 	app.get('/models', (req, res) => {
 		// #swagger.summary = 'Get all models'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		queries.models.getAll(user, pass, 'SELECT * FROM models')
 			.then((rows) =>{
 				for(var row of rows){

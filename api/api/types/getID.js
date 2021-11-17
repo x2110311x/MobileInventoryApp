@@ -7,7 +7,7 @@ function types_getID(app) {
 	app.get('/types/:typeid', (req, res) => {
 		// #swagger.summary = 'Get a specific item type'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let typeid = typecheck.checkInt(req.params.typeid);
 		if(!typeid || typeid === undefined){
 			res.sendStatus(400);

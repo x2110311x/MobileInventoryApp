@@ -8,7 +8,7 @@ function vendors_put(app) {
 	app.put('/vendors', (req, res) => {
 		// #swagger.summary = 'Add a new vendor'
 		let user = req.uid;
-		let pass = req.header('X-Auth');
+		let pass = req.auth;
 		let name = req.body.name;
 		let accNumber = req.body.account_number;
 		queries.vendors.add(user, pass, name, accNumber)

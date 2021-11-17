@@ -38,7 +38,7 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'CALL AddCompanyUser(' + conn.escape(companyid) + ',' + conn.escape(first_name) + ',' + conn.escape(last_name) + ')';
+					let query = 'CALL addCompanyUser(' + conn.escape(companyid) + ',' + conn.escape(first_name) + ',' + conn.escape(last_name) + ')';
 					conn.query(query)
 						.then((rows) =>{
 							return resolve(rows);
@@ -54,7 +54,7 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'CALL UpdateCompanyUser(' + conn.escape(companyid) + ',' + conn.escape(id) + ',' + conn.escape(first_name) + ',' + conn.escape(last_name) + ')';
+					let query = 'CALL updateCompanyUser(' + conn.escape(companyid) + ',' + conn.escape(id) + ',' + conn.escape(first_name) + ',' + conn.escape(last_name) + ')';
 					conn.query(query)
 						.then((rows) =>{
 							return resolve(rows);

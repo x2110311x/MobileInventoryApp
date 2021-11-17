@@ -7,6 +7,7 @@ function(req, res, next) {
 	getAADGroups(token)
 		.then((groups) =>{
 			req.primaryGroup = groups.topGroup;
+			req.groups = groups.allGroups;
 			next();
 		}).catch((err) =>{
 			console.log(err);

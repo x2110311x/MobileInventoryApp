@@ -38,7 +38,7 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'CALL updateModel(' + conn.escape(name) + ',' + conn.escape(typeid) + ')';
+					let query = 'CALL addModel(' + conn.escape(name) + ',' + conn.escape(typeid) + ')';
 					conn.query(query)
 						.then((rows) =>{
 							return resolve(rows);

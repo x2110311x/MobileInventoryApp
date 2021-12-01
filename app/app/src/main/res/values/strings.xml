@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Inventory App</string>
+    <string name="str_btn_newOrder">Enter new order</string>
+    <string name="str_btn_receiveItem">Receive new item</string>
+    <string name="str_btn_viewInventory">View inventory</string>
+    <string name="str_btn_checkOut">Check out Item</string>
+    <string name="str_btn_checkIn">Check in Item</string>
+    <string name="str_btn_viewUsed">View items used</string>
+</resources>

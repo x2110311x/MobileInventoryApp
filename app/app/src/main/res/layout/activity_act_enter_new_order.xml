@@ -6,4 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".EnterNewOrder">
 
+    <EditText
+        android:id="@+id/txt_OrderNumber"
+        android:layout_width="327dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Order Number"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <DatePicker
+        android:id="@+id/datePicker1"
+        android:layout_width="327dp"
+        android:layout_height="154dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="20dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_OrderNumber" />
+
+    <Spinner
+        android:id="@+id/spn_Vendor"
+        android:layout_width="328dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker1"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/view_items"
+        android:layout_width="329dp"
+        android:layout_height="362dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spn_Vendor" />
 </androidx.constraintlayout.widget.ConstraintLayout>

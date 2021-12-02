@@ -5,9 +5,10 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.18385416666666668" />
-        <entry key="app/src/main/res/layout/activity_act_enter_new_order.xml" value="0.15364583333333334" />
-        <entry key="app/src/main/res/layout/activity_act_receive_item.xml" value="0.15364583333333334" />
-        <entry key="app/src/main/res/layout/activity_check_out_item.xml" value="0.15364583333333334" />
+        <entry key="app/src/main/res/layout/activity_act_enter_new_order.xml" value="0.3315068493150685" />
+        <entry key="app/src/main/res/layout/activity_act_receive_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_check_in_item.xml" value="0.15070921985815602" />
+        <entry key="app/src/main/res/layout/activity_check_out_item.xml" value="0.22440810979151055" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29200178662706255" />
         <entry key="app/src/main/res/layout/activity_view_inventory.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/activity_view_items_used.xml" value="0.15364583333333334" />

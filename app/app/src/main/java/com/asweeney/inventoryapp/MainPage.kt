@@ -9,69 +9,32 @@ class MainPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         registerButtons()
     }
 
-    fun registerButtons(){
-        val btn_newOrder = findViewById(R.id.btn_newOrder) as Button
-        btn_newOrder.setOnClickListener {
-            enterNewOrder()
+    private fun registerButtons() {
+        findViewById<Button>(R.id.btn_newOrder).setOnClickListener {
+            startActivity(Intent(this, EnterNewOrder::class.java))
         }
 
-        val btn_receiveItem = findViewById(R.id.btn_receiveItem) as Button
-        btn_receiveItem.setOnClickListener {
-            receiveItem()
+        findViewById<Button>(R.id.btn_receiveItem).setOnClickListener {
+            startActivity(Intent(this, ReceiveItem::class.java))
         }
 
-        val btn_viewInventory = findViewById(R.id.btn_viewInventory) as Button
-        btn_viewInventory.setOnClickListener {
-            viewInventory()
+        findViewById<Button>(R.id.btn_viewInventory).setOnClickListener {
+            startActivity(Intent(this, ViewInventory::class.java))
         }
 
-        val btn_checkOut = findViewById(R.id.btn_checkOut) as Button
-        btn_checkOut.setOnClickListener {
-            checkOut()
+        findViewById<Button>(R.id.btn_checkOut).setOnClickListener {
+            startActivity(Intent(this, CheckOutItem::class.java))
         }
 
-        val btn_checkIn = findViewById(R.id.btn_checkIn) as Button
-        btn_checkIn.setOnClickListener {
-            checkIn()
+        findViewById<Button>(R.id.btn_checkIn).setOnClickListener {
+            startActivity(Intent(this, CheckInItem::class.java))
         }
 
-        val btn_viewUsed = findViewById(R.id.btn_viewUsed) as Button
-        btn_viewUsed.setOnClickListener {
-            viewUsedItems()
+        findViewById<Button>(R.id.btn_viewUsed).setOnClickListener {
+            startActivity(Intent(this, ViewItemsUsed::class.java))
         }
-    }
-
-    fun enterNewOrder() {
-        val intent = Intent(this, EnterNewOrder::class.java)
-        startActivity(intent)
-    }
-
-    fun receiveItem() {
-        val intent = Intent(this, ReceiveItem::class.java)
-        startActivity(intent)
-    }
-
-    fun viewInventory(){
-        val intent = Intent(this, ViewInventory::class.java)
-        startActivity(intent)
-    }
-
-    fun checkOut(){
-        val intent = Intent(this, CheckOutItem::class.java)
-        startActivity(intent)
-    }
-
-    fun checkIn(){
-        val intent = Intent(this, CheckInItem::class.java)
-        startActivity(intent)
-    }
-
-    fun viewUsedItems(){
-        val intent = Intent(this, ViewItemsUsed::class.java)
-        startActivity(intent)
     }
 }

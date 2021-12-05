@@ -9,6 +9,8 @@
         <entry key="app/src/main/res/layout/activity_act_receive_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_check_in_item.xml" value="0.15070921985815602" />
         <entry key="app/src/main/res/layout/activity_check_out_item.xml" value="0.22440810979151055" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.11594202898550725" />
+        <entry key="app/src/main/res/layout/activity_login_callback.xml" value="0.11594202898550725" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29200178662706255" />
         <entry key="app/src/main/res/layout/activity_view_inventory.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/activity_view_items_used.xml" value="0.15364583333333334" />

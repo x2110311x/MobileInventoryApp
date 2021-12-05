@@ -21,10 +21,12 @@ class MainPage : AppCompatActivity() {
 
     private fun checkLogin(){
         val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-        val token = sharedPref.getString("access_token", "NONE")
+        val accesstoken = sharedPref.getString("access_token", "NONE")
+        val idtoken = sharedPref.getString("id_token", "NONE")
+        val baseUrl = getResources().getString(R.string.api_baseurl)
         Toast.makeText(applicationContext, "Checking Login Status", Toast.LENGTH_SHORT).show()
         GlobalScope.launch {
-            val api = APIClient(token!!)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl!!)
             api.checkLogin()
             if (!(api.loginStatus)){
                 openCustomTab()
@@ -37,7 +39,8 @@ class MainPage : AppCompatActivity() {
         builder.setExitAnimations(this, android.R.anim.fade_in, android.R.anim.fade_out)
         val customTabsIntent = builder.build()
         customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-        customTabsIntent.launchUrl(this, Uri.parse("https://10.10.10.30:8443/auth/applogin"))
+        val baseUrl = getResources().getString(R.string.api_baseurl)
+        customTabsIntent.launchUrl(this, Uri.parse(baseUrl + "auth/applogin"))
         finish()
     }
 

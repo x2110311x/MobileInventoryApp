@@ -1,9 +1,7 @@
 package com.asweeney.inventoryapp
 
-import okhttp3.Call
-import okhttp3.Response
-import java.io.IOException
 import okhttp3.OkHttpClient
+import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.HostnameVerifier
@@ -12,11 +10,13 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-class APIClient(token: String) {
+class APIClient(accesstoken: String, idtoken: String, base_url: String) {
     var loginStatus = false
-    private val token: String = token
+    private val accesstoken: String = accesstoken
+    private val idtoken: String = idtoken
+    private val base_url: String = base_url
     private val client = OkHttpClient.Builder()
-        .ignoreAllSSLErrors()
+        .apply { if (BuildConfig.DEBUG) ignoreAllSSLErrors() }
         .build()
     private fun OkHttpClient.Builder.ignoreAllSSLErrors(): OkHttpClient.Builder {
         val naiveTrustManager = object : X509TrustManager {
@@ -36,8 +36,8 @@ class APIClient(token: String) {
     }
     suspend fun checkLogin() {
         val request = okhttp3.Request.Builder()
-            .url("https://10.10.10.30:8443/auth/loginstatus")
-            .addHeader("X-Auth", token)
+            .url(base_url + "auth/loginstatus")
+            .addHeader("X-Auth", accesstoken)
             .build()
 
         client.newCall(request).execute().use { response ->

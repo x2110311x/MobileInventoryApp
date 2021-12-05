@@ -20,9 +20,9 @@ class CheckOutItem : AppCompatActivity() {
         setUserSpinner()
     }
 
-    fun setCompanySpinner(){
+    private fun setCompanySpinner(){
         val context = this
-        val spn_itemCompany: Spinner = findViewById(R.id.spn_itemCompany)
+        val spnitemCompany: Spinner = findViewById(R.id.spn_itemCompany)
         val list = mutableListOf(
             "Company 1",
             "Company 2",
@@ -52,7 +52,7 @@ class CheckOutItem : AppCompatActivity() {
                 view.setTypeface(view.typeface, Typeface.BOLD)
 
                 // set selected item style
-                if (position == spn_itemCompany.selectedItemPosition && position != 0) {
+                if (position == spnitemCompany.selectedItemPosition && position != 0) {
                     view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                     view.setTextColor(Color.parseColor("#333399"))
                 }
@@ -73,12 +73,12 @@ class CheckOutItem : AppCompatActivity() {
         }
 
         // finally, data bind spinner with adapter
-        spn_itemCompany.adapter = adapter
+        spnitemCompany.adapter = adapter
     }
 
-    fun setUserSpinner(){
+    private fun setUserSpinner(){
         val context = this
-        val spn_itemUser: Spinner = findViewById(R.id.spn_itemUser)
+        val spnitemUser: Spinner = findViewById(R.id.spn_itemUser)
         val list = mutableListOf(
             "User 1",
             "User 2",
@@ -108,7 +108,7 @@ class CheckOutItem : AppCompatActivity() {
                 view.setTypeface(view.typeface, Typeface.BOLD)
 
                 // set selected item style
-                if (position == spn_itemUser.selectedItemPosition && position != 0) {
+                if (position == spnitemUser.selectedItemPosition && position != 0) {
                     view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                     view.setTextColor(Color.parseColor("#333399"))
                 }
@@ -129,7 +129,7 @@ class CheckOutItem : AppCompatActivity() {
         }
 
         // finally, data bind spinner with adapter
-        spn_itemUser.adapter = adapter
+        spnitemUser.adapter = adapter
     }
 
 }

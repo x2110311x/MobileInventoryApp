@@ -21,7 +21,7 @@ class EnterNewOrder : AppCompatActivity() {
 
     fun setSpinner(){
         val context = this
-        val spn_Vendor: Spinner = findViewById(R.id.spn_Vendor)
+        val spnVendor: Spinner = findViewById(R.id.spn_Vendor)
         val list = mutableListOf(
             "Amazon",
             "Target Distributing",
@@ -51,7 +51,7 @@ class EnterNewOrder : AppCompatActivity() {
                 view.setTypeface(view.typeface, Typeface.BOLD)
 
                 // set selected item style
-                if (position == spn_Vendor.selectedItemPosition && position != 0) {
+                if (position == spnVendor.selectedItemPosition && position != 0) {
                     view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                     view.setTextColor(Color.parseColor("#333399"))
                 }
@@ -72,6 +72,6 @@ class EnterNewOrder : AppCompatActivity() {
         }
 
         // finally, data bind spinner with adapter
-        spn_Vendor.adapter = adapter
+        spnVendor.adapter = adapter
     }
 }

@@ -10,11 +10,11 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-class APIClient(accesstoken: String, idtoken: String, base_url: String) {
+class APIClient(accesstoken: String, idtoken: String, baseurl: String) {
     var loginStatus = false
     private val accesstoken: String = accesstoken
     private val idtoken: String = idtoken
-    private val base_url: String = base_url
+    private val base_url: String = baseurl
     private val client = OkHttpClient.Builder()
         .apply { if (BuildConfig.DEBUG) ignoreAllSSLErrors() }
         .build()

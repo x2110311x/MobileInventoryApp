@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 require('./login')(router);
+require('./applogin')(router);
 router.use('/tokencheck', require('./tokencheck'));
 
 require('./getGroups.js')(router);

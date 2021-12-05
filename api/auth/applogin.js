@@ -34,7 +34,7 @@ function login(app) {
     
 		pca.acquireTokenByCode(tokenRequest).then((response) => {
 			console.log('\nResponse: \n:', response);
-			let url = `${config.auth.appcallbackURL}?access=${response.accessToken}&id=${response.idToken}`;
+			let url = `${config.auth.appURI}?access=${response.accessToken}&id=${response.idToken}`;
 			res.redirect(url);
 		}).catch((error) => {
 			console.log(error);

@@ -1,4 +1,5 @@
 /*jshint esversion: 6 */
+const fetch = require('node-fetch');
 
 module.exports = 
 function getGroups(app){

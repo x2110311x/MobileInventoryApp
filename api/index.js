@@ -35,6 +35,7 @@ app.use(function(req, res, next) {
 
 const api = require('./api');
 const login = require('./auth');
+app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }));
 app.use('/api', api);
 app.use('/auth', login);
 

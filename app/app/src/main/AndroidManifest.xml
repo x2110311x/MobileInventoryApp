@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InventoryApp"
         android:usesCleartextTraffic="false">
+
         <activity
             android:name=".LoginCallback"
             android:exported="true"
@@ -29,24 +30,31 @@
                 tools:ignore="AppLinkUrlError" />
         </intent-filter>
         </activity>
+
         <activity
             android:name=".ViewItemsUsed"
             android:exported="false" />
+
         <activity
             android:name=".CheckInItem"
             android:exported="false" />
+
         <activity
             android:name=".CheckOutItem"
             android:exported="false" />
+
         <activity
             android:name=".EnterNewOrder"
             android:exported="false" />
+
         <activity
             android:name=".ReceiveItem"
             android:exported="false" />
+
         <activity
             android:name=".ViewInventory"
             android:exported="false" />
+
         <activity
             android:name=".MainPage"
             android:exported="true"
@@ -56,6 +64,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="android:screenOrientation"
+            android:stateNotNeeded="true"/>
     </application>
 
 </manifest>

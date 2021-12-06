@@ -17,7 +17,7 @@ class InventoryItem(
     val serial_number: String?,
     val model: String,
     val typeid: String
-    ){
+){
     val name: String
         get() = getNameFromDesc(description)
 }

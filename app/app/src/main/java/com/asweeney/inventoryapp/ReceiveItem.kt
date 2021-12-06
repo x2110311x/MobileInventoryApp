@@ -13,8 +13,10 @@ class ReceiveItem : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_receive_item)
+
         setSpinner()
         registerButtons()
+
     }
 
     fun receiveItem(){

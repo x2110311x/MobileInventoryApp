@@ -57,4 +57,41 @@ class APIClient(private val accesstoken: String,
             return response.body!!.string()
         }
     }
+
+    fun getItem(itemID: Int) : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun getCompanies() : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/companies")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun getCompanyUsers(companyID: Int) : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/companies/$companyID/users")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
 }

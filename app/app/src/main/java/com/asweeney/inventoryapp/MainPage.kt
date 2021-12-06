@@ -27,7 +27,6 @@ class MainPage : AppCompatActivity() {
         Toast.makeText(applicationContext, "Checking Login Status", Toast.LENGTH_SHORT).show()
         GlobalScope.launch {
             val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-            api.checkLogin()
             if (!(api.checkLogin())){
                 openCustomTab()
             }

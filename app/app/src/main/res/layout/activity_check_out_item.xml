@@ -19,10 +19,9 @@
     <TextView
         android:id="@+id/txt_itemID_out"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="3dp"
-        android:text="Item ID: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_scanLabel" />
 
@@ -31,7 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="75dp"
         android:layout_marginEnd="30dp"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"

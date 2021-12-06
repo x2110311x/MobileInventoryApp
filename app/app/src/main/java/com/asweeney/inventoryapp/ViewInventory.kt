@@ -26,13 +26,13 @@ class ViewInventory : AppCompatActivity() {
     }
     private fun getItemData(): List<InventoryItem> {
         var list = ArrayList<InventoryItem>()
-        val job = GlobalScope.launch(Dispatchers.Default) {
+        val job = CoroutineScope(Dispatchers.IO).launch {
             val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
             val accesstoken = sharedPref.getString("access_token", "NONE")
             val idtoken = sharedPref.getString("id_token", "NONE")
             val baseUrl = resources.getString(R.string.api_baseurl)
             val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-            var items = api.getItems()
+            val items = api.getItems()
 
             val listType = object : TypeToken<ArrayList<InventoryItem?>?>() {}.type
             list = Gson().fromJson(items, listType)

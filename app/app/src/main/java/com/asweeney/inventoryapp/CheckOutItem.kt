@@ -2,12 +2,10 @@ package com.asweeney.inventoryapp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,7 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.zxing.integration.android.IntentIntegrator
@@ -29,7 +28,7 @@ class CheckOutItem : AppCompatActivity() {
         setContentView(R.layout.activity_check_out_item)
 
         setCompanySpinner(true)
-        GlobalScope.launch(Dispatchers.Default) { setCompanySpinner() }
+        CoroutineScope(Dispatchers.IO).launch { setCompanySpinner() }
 
         mQrResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -54,7 +53,7 @@ class CheckOutItem : AppCompatActivity() {
         val context = this
         val spnitemCompany: Spinner = findViewById(R.id.spn_itemCompany)
         val list = getCompanies(quick)
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
             // initialize an array adapter for spinner
             val adapter: ArrayAdapter<Company> = object : ArrayAdapter<Company>(
                 context,
@@ -107,7 +106,7 @@ class CheckOutItem : AppCompatActivity() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
 
                 val selectedObject = spnitemCompany.selectedItem as Company
-                GlobalScope.launch(Dispatchers.Default) { setUserSpinner(selectedObject.id) }
+                CoroutineScope(Dispatchers.IO).launch { setUserSpinner(selectedObject.id) }
             }
         }
     }
@@ -117,7 +116,7 @@ class CheckOutItem : AppCompatActivity() {
         val spnitemUser: Spinner = findViewById(R.id.spn_itemUser)
         val list = getUsers(company)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
             // initialize an array adapter for spinner
             val adapter: ArrayAdapter<CompanyUser> = object : ArrayAdapter<CompanyUser>(
                 context,
@@ -181,13 +180,13 @@ class CheckOutItem : AppCompatActivity() {
             val alert = AlertDialog.Builder(ctx)
                 .setMessage("Scan another QR Code?")
                 .setCancelable(true)
-                .setPositiveButton("Proceed", DialogInterface.OnClickListener {
-                        dialog, id -> scanQR()
-                })
+                .setPositiveButton("Proceed") { _, _ ->
+                    scanQR()
+                }
                 // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                        dialog, id -> dialog.cancel()
-                })
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.cancel()
+                }
                 .create()
             alert.setTitle("Invalid QR Code Scanned")
             alert.show()
@@ -197,40 +196,42 @@ class CheckOutItem : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadItem(itemID: Int){
-        lateinit var invItem: InventoryItem
-        val txtItemID: TextView = findViewById(R.id.txt_itemID_out)
-        GlobalScope.launch(Dispatchers.Default) {
-            val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-            val item = api.getItem(itemID)
-            invItem = Gson().fromJson(item, InventoryItem::class.java)
-            GlobalScope.launch(Dispatchers.Main) {
-                txtItemID.text = "Name: ${invItem.name}\n" +
-                        "Type: ${invItem.typeid}\n" +
-                        "Model: ${invItem.model}\n" +
-                        "Serial Number: ${invItem.serial_number}\n" +
-                        "ID: ${invItem.id}"
-                findViewById<Button>(R.id.btn_checkOutItem)?.isEnabled = true
-                Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
+        if(itemID != 0) {
+            lateinit var invItem: InventoryItem
+            val txtItemID: TextView = findViewById(R.id.txt_itemID_out)
+            CoroutineScope(Dispatchers.IO).launch {
+                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+                val accesstoken = sharedPref.getString("access_token", "NONE")
+                val idtoken = sharedPref.getString("id_token", "NONE")
+                val baseUrl = resources.getString(R.string.api_baseurl)
+                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val item = api.getItem(itemID)
+                invItem = Gson().fromJson(item, InventoryItem::class.java)
+                CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
+                    txtItemID.text = "Name: ${invItem.name}\n" +
+                            "Type: ${invItem.typeid}\n" +
+                            "Model: ${invItem.model}\n" +
+                            "Serial Number: ${invItem.serial_number}\n" +
+                            "ID: ${invItem.id}"
+                    findViewById<Button>(R.id.btn_checkOutItem)?.isEnabled = true
+                    Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
 
+                }
+                delay(1000)
             }
-            delay(1000)
         }
     }
 
     private fun getCompanies(quick: Boolean = false): List<Company> {
         var list = ArrayList<Company>()
         if(!quick) {
-            val job = GlobalScope.launch(Dispatchers.Default) {
+            val job = CoroutineScope(Dispatchers.IO).launch {
                 val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
                 val accesstoken = sharedPref.getString("access_token", "NONE")
                 val idtoken = sharedPref.getString("id_token", "NONE")
                 val baseUrl = resources.getString(R.string.api_baseurl)
                 val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-                var companies = api.getCompanies()
+                val companies = api.getCompanies()
 
                 val listType = object : TypeToken<ArrayList<Company?>?>() {}.type
                 list = Gson().fromJson(companies, listType)
@@ -246,13 +247,13 @@ class CheckOutItem : AppCompatActivity() {
     private fun getUsers(company: Int): List<CompanyUser> {
         var list = ArrayList<CompanyUser>()
         if(company != 0){
-            val job = GlobalScope.launch(Dispatchers.Default) {
+            val job = CoroutineScope(Dispatchers.IO).launch {
                 val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
                 val accesstoken = sharedPref.getString("access_token", "NONE")
                 val idtoken = sharedPref.getString("id_token", "NONE")
                 val baseUrl = resources.getString(R.string.api_baseurl)
                 val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-                var companies = api.getCompanyUsers(company)
+                val companies = api.getCompanyUsers(company)
 
                 val listType = object : TypeToken<ArrayList<CompanyUser?>?>() {}.type
                 list = Gson().fromJson(companies, listType)

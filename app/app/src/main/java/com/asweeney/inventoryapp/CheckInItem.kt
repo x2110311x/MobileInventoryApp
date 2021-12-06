@@ -2,17 +2,21 @@ package com.asweeney.inventoryapp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.zxing.integration.android.IntentIntegrator
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -59,13 +63,13 @@ class CheckInItem : AppCompatActivity() {
             val alert = AlertDialog.Builder(ctx)
                 .setMessage("Scan another QR Code?")
                 .setCancelable(true)
-                .setPositiveButton("Proceed", DialogInterface.OnClickListener {
-                        dialog, id -> scanQR()
-                })
+                .setPositiveButton("Proceed") { _, _ ->
+                    scanQR()
+                }
                 // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                        dialog, id -> dialog.cancel()
-                })
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.cancel()
+                }
                 .create()
             alert.setTitle("Invalid QR Code Scanned")
             alert.show()
@@ -74,28 +78,30 @@ class CheckInItem : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadItem(itemID: Int){
-        lateinit var invItem: InventoryItem
-        val txtItemID: TextView = findViewById(R.id.txt_itemID_in)
-        GlobalScope.launch(Dispatchers.Default) {
-            val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-            val item = api.getItem(itemID)
-            invItem = Gson().fromJson(item, InventoryItem::class.java)
-            GlobalScope.launch(Dispatchers.Main) {
-                txtItemID.text = "Name: ${invItem.name}\n" +
-                        "Type: ${invItem.typeid}\n" +
-                        "Model: ${invItem.model}\n" +
-                        "Serial Number: ${invItem.serial_number}\n" +
-                        "ID: ${invItem.id}"
-                findViewById<Button>(R.id.btn_checkInItem)?.isEnabled = true
-                Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
+    private fun loadItem(itemID: Int) {
+        if (itemID != 0) {
+            lateinit var invItem: InventoryItem
+            val txtItemID: TextView = findViewById(R.id.txt_itemID_in)
+            CoroutineScope(Dispatchers.IO).launch {
+                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+                val accesstoken = sharedPref.getString("access_token", "NONE")
+                val idtoken = sharedPref.getString("id_token", "NONE")
+                val baseUrl = resources.getString(R.string.api_baseurl)
+                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val item = api.getItem(itemID)
+                invItem = Gson().fromJson(item, InventoryItem::class.java)
+                CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
+                    txtItemID.text = "Name: ${invItem.name}\n" +
+                            "Type: ${invItem.typeid}\n" +
+                            "Model: ${invItem.model}\n" +
+                            "Serial Number: ${invItem.serial_number}\n" +
+                            "ID: ${invItem.id}"
+                    findViewById<Button>(R.id.btn_checkInItem)?.isEnabled = true
+                    Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
 
+                }
+                delay(1000)
             }
-            delay(1000)
         }
     }
 

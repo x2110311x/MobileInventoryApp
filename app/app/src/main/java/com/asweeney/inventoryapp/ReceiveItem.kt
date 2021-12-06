@@ -19,15 +19,15 @@ class ReceiveItem : AppCompatActivity() {
 
     }
 
-    fun receiveItem(){
+    private fun receiveItem(){
         Toast.makeText(applicationContext, "Receive Item", Toast.LENGTH_SHORT).show()
     }
 
-    fun printLabel(){
+    private fun printLabel(){
         Toast.makeText(applicationContext, "Print Label", Toast.LENGTH_SHORT).show()
     }
 
-    fun setSpinner(){
+    private fun setSpinner(){
         val context = this
         val spnwaitingItems: Spinner = findViewById(R.id.spn_waitingItems)
         val list = mutableListOf(

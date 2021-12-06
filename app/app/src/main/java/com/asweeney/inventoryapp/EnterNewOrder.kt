@@ -19,7 +19,7 @@ class EnterNewOrder : AppCompatActivity() {
         setSpinner()
     }
 
-    fun setSpinner(){
+    private fun setSpinner(){
         val context = this
         val spnVendor: Spinner = findViewById(R.id.spn_Vendor)
         val list = mutableListOf(

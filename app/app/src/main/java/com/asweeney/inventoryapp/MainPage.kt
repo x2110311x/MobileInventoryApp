@@ -7,7 +7,8 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainPage : AppCompatActivity() {
@@ -25,7 +26,7 @@ class MainPage : AppCompatActivity() {
         val idtoken = sharedPref.getString("id_token", "NONE")
         val baseUrl = resources.getString(R.string.api_baseurl)
         Toast.makeText(applicationContext, "Checking Login Status", Toast.LENGTH_SHORT).show()
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
             if (!(api.checkLogin())){
                 openCustomTab()

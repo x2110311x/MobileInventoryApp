@@ -4,7 +4,6 @@ import okhttp3.OkHttpClient
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -31,7 +30,7 @@ class APIClient(private val accesstoken: String,
         }.socketFactory
 
         sslSocketFactory(insecureSocketFactory, naiveTrustManager)
-        hostnameVerifier(HostnameVerifier { _, _ -> true })
+        hostnameVerifier { _, _ -> true }
         return this
     }
     fun checkLogin() : Boolean {

@@ -13,6 +13,7 @@ class InventoryItem(
     var checked_out: Number,
     val cost: Double,
     val price: Double,
+    @Suppress("kotlin:S117")
     val serial_number: String?,
     val model: String,
     val typeid: String

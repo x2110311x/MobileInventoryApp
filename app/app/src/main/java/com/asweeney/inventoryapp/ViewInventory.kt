@@ -3,15 +3,11 @@ package com.asweeney.inventoryapp
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
-import java.lang.reflect.Type
 
 
 class ViewInventory : AppCompatActivity() {

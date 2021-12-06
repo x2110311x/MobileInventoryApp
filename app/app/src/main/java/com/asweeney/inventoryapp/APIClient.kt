@@ -12,14 +12,16 @@ import javax.net.ssl.X509TrustManager
 
 class APIClient(private val accesstoken: String,
                 private val idtoken: String,
-                private val base_url: String) {
+                private val baseurl: String) {
     private val client = OkHttpClient.Builder()
         .apply { if (BuildConfig.DEBUG) ignoreAllSSLErrors() }
         .build()
     private fun OkHttpClient.Builder.ignoreAllSSLErrors(): OkHttpClient.Builder {
         val naiveTrustManager = object : X509TrustManager {
             override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            @Suppress("kotlin:S4830")
             override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) = Unit
+            @Suppress("kotlin:S4830")
             override fun checkServerTrusted(certs: Array<X509Certificate>, authType: String) = Unit
         }
 
@@ -34,7 +36,7 @@ class APIClient(private val accesstoken: String,
     }
     fun checkLogin() : Boolean {
         val request = okhttp3.Request.Builder()
-            .url(base_url + "auth/loginstatus")
+            .url(baseurl + "auth/loginstatus")
             .addHeader("X-Auth", accesstoken)
             .build()
 
@@ -46,7 +48,7 @@ class APIClient(private val accesstoken: String,
 
     fun getItems() : String {
         val request = okhttp3.Request.Builder()
-            .url(base_url + "api/items")
+            .url(baseurl + "api/items")
             .header("Authorization", "Bearer $idtoken")
             .header("X-Auth", accesstoken)
             .build()

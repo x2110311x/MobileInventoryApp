@@ -14,10 +14,7 @@ class LoginCallback : AppCompatActivity() {
         val data: Uri? = intent?.data
         val params = data!!.toString().split("?access=").toTypedArray()[1].split("&id=").toTypedArray()
         val accessToken = params[0]
-        val idToken = params[1]
-        println(accessToken)
-        println(idToken)
-
+        val idToken = params[1].replace("#","")
         val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
         with (sharedPref.edit()) {
             putString("access_token", accessToken)

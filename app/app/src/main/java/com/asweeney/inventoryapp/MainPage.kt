@@ -15,7 +15,7 @@ class MainPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         registerButtons()
-        val source = getIntent().getStringExtra("Source");
+        val source = intent.getStringExtra("Source")
         if (source != "from LoginCallback") checkLogin()
     }
 
@@ -23,12 +23,12 @@ class MainPage : AppCompatActivity() {
         val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
         val accesstoken = sharedPref.getString("access_token", "NONE")
         val idtoken = sharedPref.getString("id_token", "NONE")
-        val baseUrl = getResources().getString(R.string.api_baseurl)
+        val baseUrl = resources.getString(R.string.api_baseurl)
         Toast.makeText(applicationContext, "Checking Login Status", Toast.LENGTH_SHORT).show()
         GlobalScope.launch {
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl!!)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
             api.checkLogin()
-            if (!(api.loginStatus)){
+            if (!(api.checkLogin())){
                 openCustomTab()
             }
         }
@@ -39,7 +39,7 @@ class MainPage : AppCompatActivity() {
         builder.setExitAnimations(this, android.R.anim.fade_in, android.R.anim.fade_out)
         val customTabsIntent = builder.build()
         customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-        val baseUrl = getResources().getString(R.string.api_baseurl)
+        val baseUrl = resources.getString(R.string.api_baseurl)
         customTabsIntent.launchUrl(this, Uri.parse(baseUrl + "auth/applogin"))
         finish()
     }
@@ -54,6 +54,7 @@ class MainPage : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_viewInventory).setOnClickListener {
+            Toast.makeText(applicationContext, "Loading Items...", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, ViewInventory::class.java))
         }
 

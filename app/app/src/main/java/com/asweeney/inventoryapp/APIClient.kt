@@ -10,11 +10,9 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-class APIClient(accesstoken: String, idtoken: String, baseurl: String) {
-    var loginStatus = false
-    private val accesstoken: String = accesstoken
-    private val idtoken: String = idtoken
-    private val base_url: String = baseurl
+class APIClient(private val accesstoken: String,
+                private val idtoken: String,
+                private val base_url: String) {
     private val client = OkHttpClient.Builder()
         .apply { if (BuildConfig.DEBUG) ignoreAllSSLErrors() }
         .build()
@@ -34,7 +32,7 @@ class APIClient(accesstoken: String, idtoken: String, baseurl: String) {
         hostnameVerifier(HostnameVerifier { _, _ -> true })
         return this
     }
-    suspend fun checkLogin() {
+    fun checkLogin() : Boolean {
         val request = okhttp3.Request.Builder()
             .url(base_url + "auth/loginstatus")
             .addHeader("X-Auth", accesstoken)
@@ -42,9 +40,19 @@ class APIClient(accesstoken: String, idtoken: String, baseurl: String) {
 
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string().toBoolean()
+        }
+    }
 
-            val resp = response.body!!.string()
-            loginStatus = resp.toBoolean()
+    fun getItems() : String {
+        val request = okhttp3.Request.Builder()
+            .url(base_url + "api/items")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
         }
     }
 }

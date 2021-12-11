@@ -46,7 +46,7 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'SELECT * FROM items WHERE checked_out=0';
+					let query = 'SELECT * FROM items WHERE checked_out=1';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);

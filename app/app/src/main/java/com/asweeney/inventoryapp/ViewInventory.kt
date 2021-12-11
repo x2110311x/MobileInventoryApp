@@ -32,7 +32,7 @@ class ViewInventory : AppCompatActivity() {
             val idtoken = sharedPref.getString("id_token", "NONE")
             val baseUrl = resources.getString(R.string.api_baseurl)
             val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-            val items = api.getItems()
+            val items = api.getReceivedItems()
 
             val listType = object : TypeToken<ArrayList<InventoryItem?>?>() {}.type
             list = Gson().fromJson(items, listType)

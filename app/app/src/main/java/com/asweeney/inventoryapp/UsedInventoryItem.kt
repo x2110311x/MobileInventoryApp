@@ -20,4 +20,8 @@ class UsedInventoryItem(
 ){
     val name: String
         get() = getNameFromDesc(description)
+
+    private fun getNameFromDesc(desc: String): String {
+        return JSONObject(desc).getString("name")
+    }
 }

@@ -20,8 +20,8 @@ class InventoryItem(
 ){
     val name: String
         get() = getNameFromDesc(description)
-}
 
-fun getNameFromDesc(desc: String): String {
-    return JSONObject(desc).getString("name")
+    private fun getNameFromDesc(desc: String): String {
+        return JSONObject(desc).getString("name")
+    }
 }

@@ -6,7 +6,7 @@
     <string name="str_btn_checkOut">Check out Item</string>
     <string name="str_btn_checkIn">Check in Item</string>
     <string name="str_btn_viewUsed">View items used</string>
-    <string name="api_baseurl">https://10.10.10.30:8443/</string>
+    <string name="api_baseurl">https://x2110311x.ddns.net:4443/</string>
     <string name="str_btn_itemViewDetails">View Details</string>
     <string name="str_btn_itemCheckOut">Check Out</string>
 </resources>

@@ -20,7 +20,7 @@ class ViewInventory : AppCompatActivity() {
     private fun loadRecycler(context: Context){
         val items = getItemData()
         val rView: RecyclerView = findViewById(R.id.view_inventoryItems)
-        rView.adapter = InventoryItemAdapter(items)
+        rView.adapter = InventoryItemAdapter(items, context)
         rView.layoutManager = LinearLayoutManager(context)
         rView.setHasFixedSize(true)
     }

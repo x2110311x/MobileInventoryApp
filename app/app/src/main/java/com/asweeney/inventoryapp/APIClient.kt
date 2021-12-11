@@ -1,6 +1,7 @@
 package com.asweeney.inventoryapp
 
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -57,6 +58,30 @@ class APIClient(private val accesstoken: String,
         }
     }
 
+    fun getUsedItems() : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun getVendors() : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/vendors")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
     fun getItem(itemID: Int) : String {
         val request = okhttp3.Request.Builder()
             .url(baseurl + "api/items/$itemID")
@@ -92,5 +117,6 @@ class APIClient(private val accesstoken: String,
             return response.body!!.string()
         }
     }
+
 
 }

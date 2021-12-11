@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.asweeney.inventoryapp">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
@@ -12,64 +13,56 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InventoryApp"
         android:usesCleartextTraffic="false">
-
         <activity
             android:name=".LoginCallback"
-            android:exported="true"
             android:autoVerify="true"
+            android:exported="true"
             android:permission="">
-        <intent-filter android:label="Login Callback">
-            <action android:name="android.intent.action.VIEW" />
+            <intent-filter android:label="Login Callback">
+                <action android:name="android.intent.action.VIEW" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-            <data
-                android:host="com.asweeney.inventoryapp"
-                android:scheme="msauth"
-                tools:ignore="AppLinkUrlError" />
-        </intent-filter>
+                <data
+                    android:host="com.asweeney.inventoryapp"
+                    android:scheme="msauth"
+                    tools:ignore="AppLinkUrlError" />
+            </intent-filter>
         </activity>
-
         <activity
             android:name=".ViewItemsUsed"
             android:exported="false" />
-
         <activity
             android:name=".CheckInItem"
             android:exported="false" />
-
         <activity
             android:name=".CheckOutItem"
             android:exported="false" />
-
         <activity
             android:name=".EnterNewOrder"
             android:exported="false" />
-
         <activity
             android:name=".ReceiveItem"
             android:exported="false" />
-
         <activity
             android:name=".ViewInventory"
             android:exported="false" />
-
         <activity
             android:name=".MainPage"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="android:screenOrientation"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation" />
     </application>
 
 </manifest>

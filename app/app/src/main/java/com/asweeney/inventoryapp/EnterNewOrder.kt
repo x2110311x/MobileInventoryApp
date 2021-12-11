@@ -10,68 +10,94 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class EnterNewOrder : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_enter_new_order)
 
-        setSpinner()
+        setSpinner(true)
+        CoroutineScope(Dispatchers.IO).launch { setSpinner() }
+
     }
 
-    private fun setSpinner(){
+    private fun setSpinner(quick: Boolean = false){
         val context = this
         val spnVendor: Spinner = findViewById(R.id.spn_Vendor)
-        val list = mutableListOf(
-            "Amazon",
-            "Target Distributing",
-            "eBay",
-            "Dell",
-        )
+        val list = getVendors()
 
-        list.add(0, "Vendor")
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
+            val adapter: ArrayAdapter<Vendor> = object : ArrayAdapter<Vendor>(
+                context,
+                android.R.layout.simple_spinner_dropdown_item,
+                list
+            ) {
+                override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                ): View {
+                    val view: TextView = super.getDropDownView(
+                        position,
+                        convertView,
+                        parent
+                    ) as TextView
+                    // set item text bold
+                    view.setTypeface(view.typeface, Typeface.BOLD)
 
-        // initialize an array adapter for spinner
-        val adapter: ArrayAdapter<String> = object : ArrayAdapter<String>(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            list
-        ) {
-            override fun getDropDownView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                val view: TextView = super.getDropDownView(
-                    position,
-                    convertView,
-                    parent
-                ) as TextView
-                // set item text bold
-                view.setTypeface(view.typeface, Typeface.BOLD)
+                    // set selected item style
+                    if (position == spnVendor.selectedItemPosition && position != 0) {
+                        view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
+                        view.setTextColor(Color.parseColor("#333399"))
+                    }
 
-                // set selected item style
-                if (position == spnVendor.selectedItemPosition && position != 0) {
-                    view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
-                    view.setTextColor(Color.parseColor("#333399"))
+                    // make hint item color gray
+                    if (position == 0) {
+                        view.setTextColor(Color.LTGRAY)
+                    }
+
+                    return view
                 }
 
-                // make hint item color gray
-                if (position == 0) {
-                    view.setTextColor(Color.LTGRAY)
+                override fun isEnabled(position: Int): Boolean {
+                    // disable first item
+                    // first item is display as hint
+                    return position != 0
                 }
-
-                return view
             }
 
-            override fun isEnabled(position: Int): Boolean {
-                // disable first item
-                // first item is display as hint
-                return position != 0
+            // finally, data bind spinner with adapter
+            spnVendor.adapter = adapter
+        }
+    }
+
+    private fun getVendors(quick: Boolean = false): List<Vendor> {
+        var list = ArrayList<Vendor>()
+        if(!quick) {
+            val job = CoroutineScope(Dispatchers.IO).launch {
+                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+                val accesstoken = sharedPref.getString("access_token", "NONE")
+                val idtoken = sharedPref.getString("id_token", "NONE")
+                val baseUrl = resources.getString(R.string.api_baseurl)
+                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val vendors = api.getVendors()
+
+                val listType = object : TypeToken<ArrayList<Vendor?>?>() {}.type
+                list = Gson().fromJson(vendors, listType)
+            }
+            runBlocking {
+                job.join()
             }
         }
-
-        // finally, data bind spinner with adapter
-        spnVendor.adapter = adapter
+        list.add(0, Vendor(0, "Select Company", null))
+        return list
     }
+
 }
+

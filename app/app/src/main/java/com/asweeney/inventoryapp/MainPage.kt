@@ -10,6 +10,10 @@ import androidx.browser.customtabs.CustomTabsIntent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.auth0.android.jwt.JWT
+import java.time.LocalDateTime
+import java.util.*
+
 
 class MainPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +30,9 @@ class MainPage : AppCompatActivity() {
         val idtoken = sharedPref.getString("id_token", "NONE")
         val baseUrl = resources.getString(R.string.api_baseurl)
         Toast.makeText(applicationContext, "Checking Login Status", Toast.LENGTH_SHORT).show()
+        if (!isLoggedIn(idtoken)){
+            openCustomTab()
+        }
         CoroutineScope(Dispatchers.IO).launch {
             val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
             if (!(api.checkLogin())){
@@ -69,5 +76,15 @@ class MainPage : AppCompatActivity() {
         findViewById<Button>(R.id.btn_viewUsed).setOnClickListener {
             startActivity(Intent(this, ViewItemsUsed::class.java))
         }
+    }
+
+    private fun isLoggedIn(token: String?): Boolean{
+        if(token == null){
+            return false
+        }
+        val jwt = JWT(token!!)
+        val expiresAt: Date? = jwt.expiresAt
+        val current = Date()
+        return expiresAt!!.after(current)
     }
 }

@@ -10,22 +10,24 @@
         android:id="@+id/txt_OrderNumber"
         android:layout_width="327dp"
         android:layout_height="48dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:autofillHints="OrderNumber"
         android:ems="10"
-        android:hint="Order Number"
+        android:hint="@string/str_txt_OrderNumber"
+        android:inputType="text"
         android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
 
     <DatePicker
         android:id="@+id/datePicker1"
         android:layout_width="327dp"
-        android:layout_height="154dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="135dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_OrderNumber" />
 
@@ -33,20 +35,52 @@
         android:id="@+id/spn_Vendor"
         android:layout_width="328dp"
         android:layout_height="50dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/datePicker1"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_addItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:contentDescription="@string/str_hint_addItem"
+        app:backgroundTint="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="@+id/view_orderItems"
+        app:layout_constraintEnd_toEndOf="@+id/view_orderItems"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/white" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/view_items"
+        android:id="@+id/view_orderItems"
         android:layout_width="0dp"
         android:layout_height="362dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_saveOrder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_items" />
+
+    <TextView
+        android:id="@+id/lbl_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/str_lbl_items"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spn_Vendor" />
+
+    <Button
+        android:id="@+id/btn_saveOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/btn_orderpage_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

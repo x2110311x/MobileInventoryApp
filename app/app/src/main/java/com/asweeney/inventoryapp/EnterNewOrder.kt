@@ -1,5 +1,8 @@
 package com.asweeney.inventoryapp
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -7,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -18,13 +23,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class EnterNewOrder : AppCompatActivity() {
+    private val orderItems = ArrayList<OrderItem>()
+    private val orderItemsAdapter = OrderItemAdapter(orderItems)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_enter_new_order)
 
         setSpinner(true)
         CoroutineScope(Dispatchers.IO).launch { setSpinner() }
-
+        loadRecycler(this)
+        registerButtons()
     }
 
     private fun setSpinner(quick: Boolean = false){
@@ -95,9 +104,48 @@ class EnterNewOrder : AppCompatActivity() {
                 job.join()
             }
         }
-        list.add(0, Vendor(0, "Select Company", null))
+        list.add(0, Vendor(0, "Select Vendor", null))
         return list
     }
 
+    private fun loadRecycler(context: Context){
+        val rView: RecyclerView = findViewById(R.id.view_orderItems)
+        rView.adapter = orderItemsAdapter
+        rView.layoutManager = LinearLayoutManager(context)
+        rView.setHasFixedSize(true)
+    }
+
+    private fun registerButtons() {
+        findViewById<Button>(R.id.btn_saveOrder).setOnClickListener {
+            saveOrder()
+        }
+
+        findViewById<FloatingActionButton>(R.id.btn_addItem).setOnClickListener {
+            startAddItem()
+        }
+
+    }
+
+    private fun startAddItem(){
+        resultLauncher.launch(Intent(this, AddItem::class.java))
+    }
+
+    private fun addItem(itemJson: String){
+        val newItemType = object : TypeToken<OrderItem?>() {}.type
+        val newItem: OrderItem = Gson().fromJson(itemJson, newItemType)
+        orderItems += newItem
+        orderItemsAdapter.notifyItemInserted(orderItems.size - 1);
+    }
+
+    private fun saveOrder(){
+        Toast.makeText(applicationContext, "Save Order", Toast.LENGTH_SHORT).show()
+    }
+
+    var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data?.getStringExtra("newItem")
+            addItem(data!!)
+        }
+    }
 }
 

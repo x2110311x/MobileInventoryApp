@@ -5,8 +5,9 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.18385416666666668" />
-        <entry key="app/src/main/res/layout/activity_act_enter_new_order.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_act_enter_new_order.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_act_receive_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_add_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_check_in_item.xml" value="0.15070921985815602" />
         <entry key="app/src/main/res/layout/activity_check_out_item.xml" value="0.22440810979151055" />
         <entry key="app/src/main/res/layout/activity_item_details.xml" value="0.165" />
@@ -17,6 +18,7 @@
         <entry key="app/src/main/res/layout/activity_view_items_used.xml" value="0.15364583333333334" />
         <entry key="app/src/main/res/layout/content_nav.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/recycler_item_view.xml" value="0.3588039867109635" />
+        <entry key="app/src/main/res/layout/recycler_orderitem_view.xml" value="0.3417117237452599" />
         <entry key="app/src/main/res/layout/recycler_useditem_view.xml" value="0.335" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.30512820512820515" />
         <entry key="app/src/main/res/menu/nav.xml" value="0.30512820512820515" />

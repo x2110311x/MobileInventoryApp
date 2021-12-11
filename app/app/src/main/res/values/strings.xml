@@ -9,4 +9,9 @@
     <string name="api_baseurl">https://x2110311x.ddns.net:4443/</string>
     <string name="str_btn_itemViewDetails">View Details</string>
     <string name="str_btn_itemCheckOut">Check Out</string>
+    <string name="str_lbl_items">Items in Order:</string>
+    <string name="str_hint_addItem">Add Item</string>
+    <string name="str_txt_OrderNumber">Order Number</string>
+    <string name="btn_orderpage_add">Add Order</string>
+    <string name="btn_add_item">Add Item</string>
 </resources>

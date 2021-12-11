@@ -37,6 +37,7 @@ class APIClient(private val accesstoken: String,
     fun checkLogin() : Boolean {
         val request = okhttp3.Request.Builder()
             .url(baseurl + "auth/loginstatus")
+            .header("Authorization", "Bearer $idtoken")
             .addHeader("X-Auth", accesstoken)
             .build()
 
@@ -46,9 +47,9 @@ class APIClient(private val accesstoken: String,
         }
     }
 
-    fun getItems() : String {
+    fun getReceivedItems() : String {
         val request = okhttp3.Request.Builder()
-            .url(baseurl + "api/items")
+            .url(baseurl + "api/items?received=true")
             .header("Authorization", "Bearer $idtoken")
             .header("X-Auth", accesstoken)
             .build()
@@ -60,7 +61,7 @@ class APIClient(private val accesstoken: String,
 
     fun getUsedItems() : String {
         val request = okhttp3.Request.Builder()
-            .url(baseurl + "api/items")
+            .url(baseurl + "api/items?checkedout=true")
             .header("Authorization", "Bearer $idtoken")
             .header("X-Auth", accesstoken)
             .build()
@@ -73,6 +74,30 @@ class APIClient(private val accesstoken: String,
     fun getVendors() : String {
         val request = okhttp3.Request.Builder()
             .url(baseurl + "api/vendors")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun getItemTypes() : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/types")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun getModels(typeid: Int) : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/models?typeid=$typeid")
             .header("Authorization", "Bearer $idtoken")
             .header("X-Auth", accesstoken)
             .build()
@@ -117,6 +142,4 @@ class APIClient(private val accesstoken: String,
             return response.body!!.string()
         }
     }
-
-
 }

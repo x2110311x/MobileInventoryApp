@@ -4,17 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class UsedInventoryItemAdapter(private val inventoryItems: List<UsedInventoryItem>, private val ctx: Context): RecyclerView.Adapter<UsedInventoryItemAdapter.UsedInventoryViewHolder>() {
     class UsedInventoryViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.txt_item_name)
         val desc: TextView = itemView.findViewById(R.id.txt_item_details)
-        val id: TextView = itemView.findViewById(R.id.txt_item_id)
-        val serial: TextView = itemView.findViewById(R.id.txt_item_serial)
+        val id: TextView = itemView.findViewById(R.id.txt_useditem_id)
+        val serial: TextView = itemView.findViewById(R.id.txt_usedItem_serial)
         val companyUser: TextView = itemView.findViewById(R.id.txt_compuser)
         val ticket: TextView = itemView.findViewById(R.id.txt_ticket)
     }

@@ -31,16 +31,16 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_item_name" />
 
         <TextView
-            android:id="@+id/txt_item_price"
+            android:id="@+id/txt_usedItem_serial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="1234"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_item_cost" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_useditem_id" />
 
         <TextView
-            android:id="@+id/txt_item_cost"
+            android:id="@+id/txt_useditem_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="#1"
@@ -65,7 +65,7 @@
             android:layout_marginTop="8dp"
             android:text="Ticket #"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_item_price" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_usedItem_serial" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

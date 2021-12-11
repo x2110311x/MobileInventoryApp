@@ -26,6 +26,38 @@ module.exports = {
 				});
 		});
 	},
+	getReceived:function(user, pass){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'SELECT * FROM items WHERE received=1 AND checked_out=0';
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err)=> {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
+	getCheckedOut:function(user, pass){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'SELECT * FROM items WHERE checked_out=0';
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err)=> {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
 	getID:function(user, pass, id){
 		return new Promise((resolve, reject) => {
 			connect(user, pass)

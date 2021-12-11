@@ -8,8 +8,8 @@ function items_get(app) {
 		// #swagger.summary = 'Get all items'
 		let user = req.uid;
 		let pass = req.auth;
-		let received = typecheck.checkBool(req.query.received);
-		let checkedout = typecheck.checkBool(req.query.checkedout);
+		let received = (req.query.received != undefined ? typecheck.checkBool(req.query.received) : false);
+		let checkedout = (req.query.checkedout != undefined ? typecheck.checkBool(req.query.checkedout) : false);
 		if(received && checkedout){
 			res.sendStatus(400);
 			return;

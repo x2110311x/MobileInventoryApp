@@ -18,6 +18,23 @@ module.exports = {
 				});
 		});
 	},
+	getAllByType:function(user, pass, typeid){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'SELECT * FROM models WHERE typeid =' + conn.escape(typeid);
+					conn.query(query)
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err)=> {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
+
 	getID:function(user, pass, id){
 		return new Promise((resolve, reject) => {
 			connect(user, pass)

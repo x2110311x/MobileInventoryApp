@@ -24,4 +24,8 @@ class InventoryItem(
     private fun getNameFromDesc(desc: String): String {
         return JSONObject(desc).getString("name")
     }
+
+    override fun toString(): String {
+        return name
+    }
 }

@@ -39,7 +39,7 @@ class EnterNewOrder : AppCompatActivity() {
     private fun setSpinner(quick: Boolean = false){
         val context = this
         val spnVendor: Spinner = findViewById(R.id.spn_Vendor)
-        val list = getVendors()
+        val list = getVendors(quick)
 
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
             val adapter: ArrayAdapter<Vendor> = object : ArrayAdapter<Vendor>(

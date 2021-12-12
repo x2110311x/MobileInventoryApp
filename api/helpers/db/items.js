@@ -33,7 +33,7 @@ module.exports = {
 					let query = 'SELECT i.id, i.order_number, i.description, i.received, i.checked_out, ' +
 						'i.cost, i.price, t.type_name as type, m.name as model, i.serial_number ' +
 						'FROM items as i, itemtypes as t, models as m ' +
-						'WHERE i.typeid = m.typeid AND i.model = m.id AND received=0 AND checked_out=0';
+						'WHERE i.typeid = t.typeid AND t.typeid = m.typeid AND i.model = m.id AND received=0 AND checked_out=0';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);
@@ -52,7 +52,7 @@ module.exports = {
 					let query = 'SELECT i.id, i.order_number, i.description, i.received, i.checked_out, ' +
 						'i.cost, i.price, t.type_name as type, m.name as model, i.serial_number ' +
 						'FROM items as i, itemtypes as t, models as m ' +
-						'WHERE i.typeid = m.typeid AND i.model = m.id AND received=1 AND checked_out=0';
+						'WHERE i.typeid = t.typeid AND i.model = m.id AND m.typeid = t.typeid AND received=1 AND checked_out=0';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);

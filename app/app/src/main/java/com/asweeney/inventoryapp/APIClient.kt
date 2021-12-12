@@ -1,13 +1,15 @@
 package com.asweeney.inventoryapp
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+import okhttp3.FormBody
 
 
 class APIClient(private val accesstoken: String,
@@ -44,6 +46,18 @@ class APIClient(private val accesstoken: String,
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
             return response.body!!.string().toBoolean()
+        }
+    }
+
+    fun getNotReceivedItems() : String {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items?received=false")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
         }
     }
 
@@ -140,6 +154,66 @@ class APIClient(private val accesstoken: String,
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
             return response.body!!.string()
+        }
+    }
+
+    fun getItemQRCode(itemID: Int) : Bitmap {
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID/qrcode")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return BitmapFactory.decodeStream(response.body!!.byteStream())
+        }
+    }
+
+    fun setItemSerial(itemID: Int, serial: String) {
+        val body = FormBody.Builder()
+            .add("serial_number", serial)
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .post(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+        }
+    }
+
+    fun receiveItem(itemID: Int) {
+        val body = FormBody.Builder()
+            .add("received", "true")
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .post(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+        }
+    }
+
+    fun checkOutItem(itemID: Int, userID: Int, companyID: Int, ticket: Int){
+        val body = FormBody.Builder()
+            .add("checked_out", "true")
+            .add("company", "$companyID")
+            .add("user", "$userID")
+            .add("ticket", "$ticket")
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .post(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
         }
     }
 }

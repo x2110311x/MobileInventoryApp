@@ -3,7 +3,7 @@ package com.asweeney.inventoryapp
 import org.json.JSONObject
 
 class OrderItem(
-    val ordernumber: String?,
+    var ordernumber: String?,
     private val description: String,
     val cost: Double,
     val price: Double,

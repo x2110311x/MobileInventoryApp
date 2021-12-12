@@ -233,4 +233,37 @@ class APIClient(private val accesstoken: String,
         }
     }
 
+    fun addOrder(oNumber: String, vendor: Int, date: String, cost: Double): String{
+        val body = FormBody.Builder()
+            .add("orderNumber", oNumber)
+            .add("vendor", vendor.toString())
+            .add("date", date)
+            .add("cost", cost.toString())
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/orders")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .put(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            return response.body!!.string()
+        }
+    }
+
+    fun addOrderItems(orderID: Int, items:String){
+        val body = FormBody.Builder()
+            .add("items", items)
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/orders/$orderID/items")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .put(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+        }
+    }
 }

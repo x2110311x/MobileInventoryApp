@@ -45,7 +45,7 @@ function items_getID(app) {
 
 function createQR(row){
 	let data = JSON.stringify(row);
-	var canvas = createCanvas(260, 350);
+	var canvas = createCanvas(300, 375);
 	var ctx = canvas.getContext('2d');
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);

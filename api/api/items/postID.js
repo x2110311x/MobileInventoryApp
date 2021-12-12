@@ -119,13 +119,5 @@ function items_post(app) {
 		} else{
 			res.sendStatus(400);
 		}
-
-		/*queries.items.update(user, pass, itemid, orderNumber, desc, cost, price, typeID, model, checked_out, received)
-			.then(() =>{
-				res.sendStatus(200);
-			}).catch(err => {
-				console.error(err);
-				res.sendStatus(500);
-			});*/
 	});
 };

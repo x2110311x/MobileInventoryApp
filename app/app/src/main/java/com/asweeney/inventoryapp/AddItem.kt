@@ -15,8 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import android.content.Intent
-
-
+import android.text.TextUtils
 
 
 class AddItem : AppCompatActivity() {
@@ -101,7 +100,8 @@ class AddItem : AppCompatActivity() {
         val list = getModels(type)
 
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-            // initialize an array adapter for spinner
+            spnitemUser.isEnabled = (type != 0)
+
             val adapter: ArrayAdapter<ItemModel> = object : ArrayAdapter<ItemModel>(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -191,17 +191,70 @@ class AddItem : AppCompatActivity() {
     }
 
     private fun saveItem(){
-        val itemModel =  findViewById<Spinner>(R.id.spn_itemModel).selectedItem as ItemModel
-        val itemType =  findViewById<Spinner>(R.id.spn_itemtype).selectedItem as ItemType
-        val itemName: String = findViewById<EditText>(R.id.txt_itemName).text.toString()
-        val itemCost: Double = findViewById<EditText>(R.id.txt_itemCost).text.toString().toDouble()
-        val itemPrice: Double = findViewById<EditText>(R.id.txt_itemPrice).text.toString().toDouble()
+        if(checkFields()) {
+            val itemModel = findViewById<Spinner>(R.id.spn_itemModel).selectedItem as ItemModel
+            val itemType = findViewById<Spinner>(R.id.spn_itemtype).selectedItem as ItemType
+            val itemName: String = findViewById<EditText>(R.id.txt_itemName).text.toString()
+            val itemCost: Double =
+                findViewById<EditText>(R.id.txt_itemCost).text.toString().toDouble()
+            val itemPrice: Double =
+                findViewById<EditText>(R.id.txt_itemPrice).text.toString().toDouble()
 
-        val newItem = OrderItem(null,"{'name':'$itemName'}",itemCost,itemPrice,itemModel,itemType)
-        val newItemJson = Gson().toJson(newItem)
-        val output = Intent()
-        output.putExtra("newItem", newItemJson)
-        setResult(RESULT_OK, output);
-        finish()
+            val newItem =
+                OrderItem(null, "{'name':'$itemName'}", itemCost, itemPrice, itemModel, itemType)
+            val newItemJson = Gson().toJson(newItem)
+            val output = Intent()
+            output.putExtra("newItem", newItemJson)
+            setResult(RESULT_OK, output)
+            finish()
+        }
+    }
+
+    private fun checkName(): Boolean {
+        val itemName = findViewById<EditText>(R.id.txt_itemName)
+        return if (TextUtils.isEmpty(itemName.text)) {
+            itemName.error = "Enter Item Name!"
+            false
+        } else true
+    }
+
+    private fun checkCost(): Boolean {
+        val itemCost = findViewById<EditText>(R.id.txt_itemCost)
+        return if (TextUtils.isEmpty(itemCost.text)) {
+            itemCost.error = "Enter Item Cost!"
+            false
+        } else true
+    }
+
+    private fun checkPrice(): Boolean {
+        val itemPrice = findViewById<EditText>(R.id.txt_itemPrice)
+        val itemCost = findViewById<EditText>(R.id.txt_itemCost)
+        return when {
+            (TextUtils.isEmpty(itemPrice.text)) -> {
+                itemPrice.error = "Enter Item Price!"
+                false
+            }
+            (itemPrice.text.toString().toDouble() < itemCost.text.toString().toDouble()) -> {
+                itemPrice.error = "Price should be higher than cost!"
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun checkModel(): Boolean{
+        val spnModel: Spinner = findViewById(R.id.spn_itemModel)
+        val spnType: Spinner = findViewById(R.id.spn_itemtype)
+        val model = spnModel.selectedItem as ItemModel
+        val type = spnType.selectedItem as ItemType
+        return if (model.id == 0){
+            val view = spnModel.selectedView as TextView
+            view.error = "Please Select a Model"
+            false
+        } else return type.typeid == model.typeid
+    }
+
+    private fun checkFields(): Boolean {
+        return checkName() && checkCost() && checkPrice() && checkModel()
     }
 }

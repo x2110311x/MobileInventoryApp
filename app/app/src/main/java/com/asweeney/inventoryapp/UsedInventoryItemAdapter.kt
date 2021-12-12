@@ -29,11 +29,11 @@ class UsedInventoryItemAdapter(private val inventoryItems: List<UsedInventoryIte
         val currentItem =  inventoryItems[position]
 
         holder.name.text = currentItem.name
-        holder.desc.text = "${currentItem.typeid} - ${currentItem.model}"
+        holder.desc.text = "${currentItem.type} - ${currentItem.model}"
         holder.id.text = "#${currentItem.id}"
-        holder.serial.text = "Serial Number: ${currentItem.serial_number}"
-        holder.companyUser.text = ""
-        holder.ticket.text = "Ticket #"
+        holder.serial.text = "S/N: ${currentItem.serial_number}"
+        holder.companyUser.text = "${currentItem.company} - ${currentItem.user}"
+        holder.ticket.text = "Ticket #${currentItem.ticket}"
     }
 
     override fun getItemCount() = inventoryItems.size

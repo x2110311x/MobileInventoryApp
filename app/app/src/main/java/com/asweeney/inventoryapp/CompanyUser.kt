@@ -5,7 +5,8 @@ class CompanyUser(
     @Suppress("kotlin:S117")
     val first_name: String,
     @Suppress("kotlin:S117")
-    val last_name: String
+    val last_name: String,
+    val companyid: Int
     ){
     private val fullName: String
         get() = "$first_name $last_name"

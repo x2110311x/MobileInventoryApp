@@ -1,12 +1,12 @@
 package com.asweeney.inventoryapp
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -23,6 +23,8 @@ import org.json.JSONObject
 
 class CheckOutItem : AppCompatActivity() {
     private lateinit var mQrResultLauncher : ActivityResultLauncher<Intent>
+    private var invItem: InventoryItem? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_out_item)
@@ -43,10 +45,9 @@ class CheckOutItem : AppCompatActivity() {
                 }
             }
 
-        findViewById<Button>(R.id.btn_scanLabel).setOnClickListener {
-            scanQR()
-        }
-        findViewById<Button>(R.id.btn_checkOutItem)?.isEnabled = false
+        findViewById<Button>(R.id.btn_scanLabel).setOnClickListener {scanQR()}
+        findViewById<Button>(R.id.btn_checkOutItem).setOnClickListener {checkOutItem(this)}
+        findViewById<Button>(R.id.btn_checkOutItem).isEnabled = false
     }
 
     private fun setCompanySpinner(quick: Boolean = false) {
@@ -117,7 +118,7 @@ class CheckOutItem : AppCompatActivity() {
         val list = getUsers(company)
 
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-            // initialize an array adapter for spinner
+            spnitemUser.isEnabled = (company != 0)
             val adapter: ArrayAdapter<CompanyUser> = object : ArrayAdapter<CompanyUser>(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -194,10 +195,8 @@ class CheckOutItem : AppCompatActivity() {
         return itemID
     }
 
-    @SuppressLint("SetTextI18n")
     private fun loadItem(itemID: Int){
         if(itemID != 0) {
-            lateinit var invItem: InventoryItem
             val txtItemID: TextView = findViewById(R.id.txt_itemID_out)
             CoroutineScope(Dispatchers.IO).launch {
                 val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
@@ -208,11 +207,11 @@ class CheckOutItem : AppCompatActivity() {
                 val item = api.getItem(itemID)
                 invItem = Gson().fromJson(item, InventoryItem::class.java)
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-                    txtItemID.text = "Name: ${invItem.name}\n" +
-                            "Type: ${invItem.typeid}\n" +
-                            "Model: ${invItem.model}\n" +
-                            "Serial Number: ${invItem.serial_number}\n" +
-                            "ID: ${invItem.id}"
+                    txtItemID.text = "Name: ${invItem!!.name}\n" +
+                            "Type: ${invItem!!.typeid}\n" +
+                            "Model: ${invItem!!.model}\n" +
+                            "Serial Number: ${invItem!!.serial_number}\n" +
+                            "ID: ${invItem!!.id}"
                     findViewById<Button>(R.id.btn_checkOutItem)?.isEnabled = true
                     Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
 
@@ -262,8 +261,69 @@ class CheckOutItem : AppCompatActivity() {
                 job.join()
             }
         }
-        list.add(0, CompanyUser(0, "Select", "User"))
+        list.add(0, CompanyUser(0, "Select", "User", 0))
         return list
     }
 
+    private fun checkOutItem(ctx: Context){
+        if(checkFields()) {
+            if(invItem?.checked_out == 1){
+                val alert = AlertDialog.Builder(ctx)
+                    .setMessage("This item appears to already be checked out.\n" +
+                            "Are you sure you want to check it out with this information?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes") { _, _ ->
+                        submitData()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.cancel()
+                    }
+                    .create()
+                alert.setTitle("Item Already Checked Out")
+                alert.show()
+            } else submitData();
+        }
+    }
+
+    private fun submitData(){
+        val spnUser: Spinner = findViewById(R.id.spn_itemUser)
+        val user = spnUser.selectedItem as CompanyUser
+        val ticketNum = findViewById<EditText>(R.id.txt_ticketNum).text.toString().toInt()
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val sharedPref =
+                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+            val accesstoken = sharedPref.getString("access_token", "NONE")
+            val idtoken = sharedPref.getString("id_token", "NONE")
+            val baseUrl = resources.getString(R.string.api_baseurl)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            api.checkOutItem(invItem!!.id, user.id, user.companyid, ticketNum)
+        }
+        runBlocking {
+            job.join()
+            finish()
+        }
+    }
+    private fun checkUser(): Boolean{
+        val spnUser: Spinner = findViewById(R.id.spn_itemUser)
+        val spnCompany: Spinner = findViewById(R.id.spn_itemCompany)
+        val user = spnUser.selectedItem as CompanyUser
+        val company = spnCompany.selectedItem as Company
+        return if (user.id == 0){
+            val view = spnUser.selectedView as TextView
+            view.error = "Please select a User"
+            false
+        } else return company.id == user.companyid
+    }
+
+    private fun checkTicket(): Boolean{
+        val ticketNum = findViewById<EditText>(R.id.txt_ticketNum)
+        return if (TextUtils.isEmpty(ticketNum.text)) {
+            ticketNum.error = "Enter Ticket Number!"
+            false
+        } else true
+    }
+
+    private fun checkFields(): Boolean {
+        return checkUser() && checkTicket()
+    }
 }

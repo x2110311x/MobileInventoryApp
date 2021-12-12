@@ -71,8 +71,8 @@ module.exports = {
 					let query = 'SELECT i.id, i.order_number, i.description, i.serial_number, t.type_name as type, m.name as model, ' +
 					'c.name as company, CONCAT(u.first_name, " ",u.last_name) as user, ui.ticket ' +
 					'FROM items as i, useditems as ui, companies as c, companyusers as u, itemtypes as t, models as m ' +
-					'WHERE checked_out=1 AND ui.companyid = c.id AND ui.item=i.id AND i.model = m.id AND m.typeid = t.typeid' + 
-					'AND i.typeid = t.typeid AND ui.companyUser = u.id;';
+					'WHERE checked_out=1 AND ui.companyid = c.id AND ui.item = i.id AND i.model = m.id AND m.typeid = t.typeid' + 
+					'AND i.typeid = t.typeid AND ui.companyUser = u.id';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);

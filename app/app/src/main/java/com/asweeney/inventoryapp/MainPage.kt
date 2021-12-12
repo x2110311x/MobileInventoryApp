@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.auth0.android.jwt.JWT
-import java.time.LocalDateTime
+import java.lang.Exception
 import java.util.*
 
 
@@ -82,9 +82,13 @@ class MainPage : AppCompatActivity() {
         if(token == null){
             return false
         }
-        val jwt = JWT(token!!)
-        val expiresAt: Date? = jwt.expiresAt
-        val current = Date()
-        return expiresAt!!.after(current)
+        return try {
+            val jwt = JWT(token)
+            val expiresAt: Date? = jwt.expiresAt
+            val current = Date()
+            expiresAt!!.after(current)
+        } catch(e: Exception) {
+            false
+        }
     }
 }

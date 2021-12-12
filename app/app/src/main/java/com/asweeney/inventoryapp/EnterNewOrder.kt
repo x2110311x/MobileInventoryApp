@@ -3,6 +3,7 @@ package com.asweeney.inventoryapp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -45,15 +46,25 @@ class EnterNewOrder : AppCompatActivity() {
             addItem(data!!)
         }
     }
+	private lateinit var sharedPref: SharedPreferences
+    private lateinit var accesstoken: String
+    private lateinit var idtoken: String
+    private lateinit var baseUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_enter_new_order)
 
+		sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+        accesstoken = sharedPref.getString("access_token", "NONE")!!
+        idtoken = sharedPref.getString("id_token", "NONE")!!
+        baseUrl = resources.getString(R.string.api_baseurl)
+
         setSpinner(true)
         CoroutineScope(Dispatchers.IO).launch { setSpinner() }
         loadRecycler(this)
         registerButtons()
+
     }
 
     private fun setSpinner(quick: Boolean = false){
@@ -77,16 +88,11 @@ class EnterNewOrder : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnVendor.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -95,13 +101,9 @@ class EnterNewOrder : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
-
-            // finally, data bind spinner with adapter
             spnVendor.adapter = adapter
         }
     }
@@ -110,11 +112,7 @@ class EnterNewOrder : AppCompatActivity() {
         var list = ArrayList<Vendor>()
         if(!quick) {
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val vendors = api.getVendors()
 
                 val listType = object : TypeToken<ArrayList<Vendor?>?>() {}.type
@@ -178,12 +176,7 @@ class EnterNewOrder : AppCompatActivity() {
         var date = "${datePicker.year}-${datePicker.month + 1}-${datePicker.dayOfMonth}"
         var cost = getTotalCost()
         val job = CoroutineScope(Dispatchers.IO).launch {
-            val sharedPref =
-                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            val api = APIClient(accesstoken, idtoken, baseUrl)
             orderID = api.addOrder(orderNumber!!, vendor.id, date, cost)
         }
         runBlocking {
@@ -209,12 +202,7 @@ class EnterNewOrder : AppCompatActivity() {
         gsonBuilder.registerTypeAdapter(OrderItem::class.java, serializer)
         var json = gsonBuilder.create().toJson(orderItems)
         val job = CoroutineScope(Dispatchers.IO).launch {
-            val sharedPref =
-                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            val api = APIClient(accesstoken, idtoken, baseUrl)
             api.addOrderItems(order.toInt(), json)
         }
         runBlocking {

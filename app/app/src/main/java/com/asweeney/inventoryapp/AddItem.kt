@@ -15,10 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import android.content.Intent
+import android.content.SharedPreferences
 import android.text.TextUtils
 
 
 class AddItem : AppCompatActivity() {
+	private lateinit var sharedPref: SharedPreferences
+    private lateinit var accesstoken: String
+    private lateinit var idtoken: String
+    private lateinit var baseUrl: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
@@ -26,6 +31,10 @@ class AddItem : AppCompatActivity() {
         setTypeSpinner(true)
         CoroutineScope(Dispatchers.IO).launch { setTypeSpinner() }
 
+		sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+        accesstoken = sharedPref.getString("access_token", "NONE")!!
+        idtoken = sharedPref.getString("id_token", "NONE")!!
+        baseUrl = resources.getString(R.string.api_baseurl)
 
         findViewById<Button>(R.id.btn_add_new_item).setOnClickListener {
             saveItem()
@@ -37,7 +46,6 @@ class AddItem : AppCompatActivity() {
         val spnitemCompany: Spinner = findViewById(R.id.spn_itemtype)
         val list = getTypes(quick)
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-            // initialize an array adapter for spinner
             val adapter: ArrayAdapter<ItemType> = object : ArrayAdapter<ItemType>(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -53,16 +61,11 @@ class AddItem : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnitemCompany.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -71,19 +74,14 @@ class AddItem : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
-
-            // finally, data bind spinner with adapter
             spnitemCompany.adapter = adapter
         }
         spnitemCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                // You can define your actions as you want
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
@@ -117,16 +115,11 @@ class AddItem : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnitemUser.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -135,13 +128,9 @@ class AddItem : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
-
-            // finally, data bind spinner with adapter
             spnitemUser.adapter = adapter
         }
     }
@@ -150,11 +139,7 @@ class AddItem : AppCompatActivity() {
         var list = ArrayList<ItemType>()
         if(!quick) {
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val types = api.getItemTypes()
 
                 val listType = object : TypeToken<ArrayList<ItemType?>?>() {}.type
@@ -172,11 +157,7 @@ class AddItem : AppCompatActivity() {
         var list = ArrayList<ItemModel>()
         if(type != 0){
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val models = api.getModels(type)
 
                 val listType = object : TypeToken<ArrayList<ItemModel?>?>() {}.type

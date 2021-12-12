@@ -2,6 +2,7 @@ package com.asweeney.inventoryapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -24,10 +25,20 @@ import org.json.JSONObject
 class CheckOutItem : AppCompatActivity() {
     private lateinit var mQrResultLauncher : ActivityResultLauncher<Intent>
     private var invItem: InventoryItem? = null
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var accesstoken: String
+    private lateinit var idtoken: String
+    private lateinit var baseUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_check_out_item)
+
+
+        sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+        accesstoken = sharedPref.getString("access_token", "NONE")!!
+        idtoken = sharedPref.getString("id_token", "NONE")!!
+        baseUrl = resources.getString(R.string.api_baseurl)
 
         setCompanySpinner(true)
         CoroutineScope(Dispatchers.IO).launch { setCompanySpinner() }
@@ -38,7 +49,6 @@ class CheckOutItem : AppCompatActivity() {
                     val result = IntentIntegrator.parseActivityResult(it.resultCode, it.data)
                     var resultStr = ""
                     if (result.contents != null) {
-                        // Do something with the contents (this is usually a URL)
                         resultStr+= result.contents
                         loadItem(getItemID(this, resultStr))
                     }
@@ -55,7 +65,6 @@ class CheckOutItem : AppCompatActivity() {
         val spnitemCompany: Spinner = findViewById(R.id.spn_itemCompany)
         val list = getCompanies(quick)
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
-            // initialize an array adapter for spinner
             val adapter: ArrayAdapter<Company> = object : ArrayAdapter<Company>(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -71,16 +80,11 @@ class CheckOutItem : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnitemCompany.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -89,8 +93,6 @@ class CheckOutItem : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
@@ -101,7 +103,6 @@ class CheckOutItem : AppCompatActivity() {
         spnitemCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                // You can define your actions as you want
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
@@ -134,16 +135,11 @@ class CheckOutItem : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnitemUser.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -152,24 +148,17 @@ class CheckOutItem : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
-
-            // finally, data bind spinner with adapter
             spnitemUser.adapter = adapter
         }
     }
 
     private fun scanQR(){
         val scanner = IntentIntegrator(this)
-        // QR Code Format
         scanner.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-        // Set Text Prompt at Bottom of QR code Scanner Activity
         scanner.setPrompt("QR Code Scanner Prompt Text")
-        // Start Scanner (don't use initiateScan() unless if you want to use OnActivityResult)
         mQrResultLauncher.launch(scanner.createScanIntent())
     }
 
@@ -199,18 +188,14 @@ class CheckOutItem : AppCompatActivity() {
         if(itemID != 0) {
             val txtItemID: TextView = findViewById(R.id.txt_itemID_out)
             CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val item = api.getItem(itemID)
                 invItem = Gson().fromJson(item, InventoryItem::class.java)
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
                     txtItemID.text = "Name: ${invItem!!.name}\n" +
                             "Type: ${invItem!!.type}\n" +
                             "Model: ${invItem!!.model}\n" +
-                            "Serial Number: ${invItem!!.serial_number}\n" +
+                            "S/N: ${invItem!!.serial_number}\n" +
                             "ID: ${invItem!!.id}"
                     findViewById<Button>(R.id.btn_checkOutItem)?.isEnabled = true
                     Toast.makeText(applicationContext, "Item Loaded", Toast.LENGTH_SHORT).show()
@@ -225,11 +210,7 @@ class CheckOutItem : AppCompatActivity() {
         var list = ArrayList<Company>()
         if(!quick) {
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val companies = api.getCompanies()
 
                 val listType = object : TypeToken<ArrayList<Company?>?>() {}.type
@@ -247,11 +228,7 @@ class CheckOutItem : AppCompatActivity() {
         var list = ArrayList<CompanyUser>()
         if(company != 0){
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val companies = api.getCompanyUsers(company)
 
                 val listType = object : TypeToken<ArrayList<CompanyUser?>?>() {}.type
@@ -281,7 +258,7 @@ class CheckOutItem : AppCompatActivity() {
                     .create()
                 alert.setTitle("Item Already Checked Out")
                 alert.show()
-            } else submitData();
+            } else submitData()
         }
     }
 
@@ -290,12 +267,7 @@ class CheckOutItem : AppCompatActivity() {
         val user = spnUser.selectedItem as CompanyUser
         val ticketNum = findViewById<EditText>(R.id.txt_ticketNum).text.toString().toInt()
         val job = CoroutineScope(Dispatchers.IO).launch {
-            val sharedPref =
-                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            val api = APIClient(accesstoken, idtoken, baseUrl)
             api.checkOutItem(invItem!!.id, user.id, user.companyid, ticketNum)
         }
         runBlocking {

@@ -19,7 +19,7 @@ class APIClient(private val accesstoken: String,
     private fun getRequest(): okhttp3.Request.Builder{
         return okhttp3.Request.Builder()
             .addHeader("Authorization", "Bearer $idtoken")
-            .addHeader("X-Auth", accesstoken);
+            .addHeader("X-Auth", accesstoken)
     }
 
     private val client = OkHttpClient.Builder()
@@ -46,8 +46,6 @@ class APIClient(private val accesstoken: String,
     fun checkLogin() : Boolean {
         val request = getRequest()
             .url(baseurl + "auth/loginstatus")
-            .header("Authorization", "Bearer $idtoken")
-            .addHeader("X-Auth", accesstoken)
             .build()
 
         client.newCall(request).execute().use { response ->

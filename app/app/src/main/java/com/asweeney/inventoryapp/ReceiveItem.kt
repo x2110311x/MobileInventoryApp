@@ -1,6 +1,7 @@
 package com.asweeney.inventoryapp
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -19,9 +20,20 @@ import androidx.print.PrintHelper
 class ReceiveItem : AppCompatActivity() {
     private var labelPrinted = false
     private var invItem: InventoryItem? = null
+
+	private lateinit var sharedPref: SharedPreferences
+    private lateinit var accesstoken: String
+    private lateinit var idtoken: String
+    private lateinit var baseUrl: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_receive_item)
+
+		sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+        accesstoken = sharedPref.getString("access_token", "NONE")!!
+        idtoken = sharedPref.getString("id_token", "NONE")!!
+        baseUrl = resources.getString(R.string.api_baseurl)
 
         setSpinner(true)
         CoroutineScope(Dispatchers.IO).launch { setSpinner() }
@@ -46,12 +58,7 @@ class ReceiveItem : AppCompatActivity() {
                 alert.show()
             } else {
                 val job = CoroutineScope(Dispatchers.IO).launch {
-                    val sharedPref =
-                        getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                    val accesstoken = sharedPref.getString("access_token", "NONE")
-                    val idtoken = sharedPref.getString("id_token", "NONE")
-                    val baseUrl = resources.getString(R.string.api_baseurl)
-                    val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                    val api = APIClient(accesstoken, idtoken, baseUrl)
                     api.receiveItem(invItem!!.id)
                 }
                 runBlocking {
@@ -67,11 +74,7 @@ class ReceiveItem : AppCompatActivity() {
         val spnItems: Spinner = findViewById(R.id.spn_waitingItems)
         val selectedObject = spnItems.selectedItem as InventoryItem
         val job = CoroutineScope(Dispatchers.IO).launch {
-            val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-            val accesstoken = sharedPref.getString("access_token", "NONE")
-            val idtoken = sharedPref.getString("id_token", "NONE")
-            val baseUrl = resources.getString(R.string.api_baseurl)
-            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            val api = APIClient(accesstoken, idtoken, baseUrl)
             val bitmap = api.getItemQRCode(selectedObject.id)
             PrintHelper(ctx).apply {
                 scaleMode = PrintHelper.SCALE_MODE_FILL
@@ -106,16 +109,11 @@ class ReceiveItem : AppCompatActivity() {
                         convertView,
                         parent
                     ) as TextView
-                    // set item text bold
                     view.setTypeface(view.typeface, Typeface.BOLD)
-
-                    // set selected item style
                     if (position == spnItems.selectedItemPosition && position != 0) {
                         view.background = ColorDrawable(Color.parseColor("#F7E7CE"))
                         view.setTextColor(Color.parseColor("#333399"))
                     }
-
-                    // make hint item color gray
                     if (position == 0) {
                         view.setTextColor(Color.LTGRAY)
                     }
@@ -124,19 +122,14 @@ class ReceiveItem : AppCompatActivity() {
                 }
 
                 override fun isEnabled(position: Int): Boolean {
-                    // disable first item
-                    // first item is display as hint
                     return position != 0
                 }
             }
-
-            // finally, data bind spinner with adapter
             spnItems.adapter = adapter
         }
         spnItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                // You can define your actions as you want
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
@@ -161,11 +154,7 @@ class ReceiveItem : AppCompatActivity() {
         var list = ArrayList<InventoryItem>()
         if (!quick) {
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 val items = api.getNotReceivedItems()
 
                 val listType = object : TypeToken<ArrayList<InventoryItem?>?>() {}.type
@@ -216,11 +205,7 @@ class ReceiveItem : AppCompatActivity() {
             val serialNumField = findViewById<EditText>(R.id.txt_serialNum)
             val serialNumber = serialNumField.text.toString()
             val job = CoroutineScope(Dispatchers.IO).launch {
-                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
-                val accesstoken = sharedPref.getString("access_token", "NONE")
-                val idtoken = sharedPref.getString("id_token", "NONE")
-                val baseUrl = resources.getString(R.string.api_baseurl)
-                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                val api = APIClient(accesstoken, idtoken, baseUrl)
                 api.setItemSerial(invItem!!.id, serialNumber)
             }
             runBlocking {

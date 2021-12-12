@@ -48,6 +48,6 @@ function login(app) {
     
 		pca.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
 			res.redirect(response);
-		}).catch((error) => console.log(JSON.stringify(error)));
+		}).catch((error) => console.err(JSON.stringify(error)));
 	});
 };

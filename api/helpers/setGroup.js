@@ -10,7 +10,7 @@ function(req, res, next) {
 			req.groups = groups.allGroups;
 			next();
 		}).catch((err) =>{
-			console.log(err);
+			console.err(err);
 			res.sendStatus(500);
 		});
 };

@@ -14,7 +14,7 @@ function getGroups(app){
 			}).catch((err) =>{
 				if(err instanceof TypeError) res.status(401).send('Invalid token');
 				else{
-					console.log(err);
+					console.err(err);
 					res.sendStatus(500);
 				}
 			});

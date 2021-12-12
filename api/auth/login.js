@@ -36,7 +36,7 @@ function login(app) {
 			let data = {'accesstoken': response.accessToken, 'idtoken': response.idToken};
 			res.status(200).send(data);
 		}).catch((error) => {
-			console.log(error);
+			console.err(error);
 			res.status(500).send(error);
 		});
 	});
@@ -49,6 +49,6 @@ function login(app) {
     
 		pca.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
 			res.redirect(response);
-		}).catch((error) => console.log(JSON.stringify(error)));
+		}).catch((error) => console.err(JSON.stringify(error)));
 	});
 };

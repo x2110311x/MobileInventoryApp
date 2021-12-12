@@ -33,7 +33,6 @@ function login(app) {
 		};
     
 		pca.acquireTokenByCode(tokenRequest).then((response) => {
-			console.log('\nResponse: \n:', response);
 			let data = {'accesstoken': response.accessToken, 'idtoken': response.idToken};
 			res.status(200).send(data);
 		}).catch((error) => {

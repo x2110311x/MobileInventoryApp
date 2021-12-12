@@ -56,8 +56,6 @@ module.exports = {
 						count+=1;
 					}					
 					query += `; UPDATE orders SET number_of_items = number_of_items + ${count};`;
-					console.log(query + '\n');
-
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);

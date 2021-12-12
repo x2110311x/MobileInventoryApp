@@ -12,7 +12,6 @@ class RootDetection {
                 return false
             }
             return detectDevBuild() or
-                    detectOTACerts() or
                     detectAPKs(ctx) or
                     detectSU() or
                     attemptSUCommand()
@@ -23,12 +22,7 @@ class RootDetection {
             val buildData: String = Build.TAGS
             return buildData.contains("test-keys")
         }
-
-
-        private fun detectOTACerts (): Boolean {
-            val otaCerts: File = File("/etc/security/otacerts.zip")
-            return otaCerts.exists()
-        }
+        
         
         private fun detectAPKs (ctx: Context): Boolean {
             val knownRootAPKs: Array<String> = arrayOf(
@@ -96,7 +90,6 @@ class RootDetection {
             } catch (e: Exception) {
                 // silently do nothing
             }
-
             return idOutput.contains("(root)")
         }
 

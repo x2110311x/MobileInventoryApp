@@ -1,0 +1,50 @@
+{
+    "auth": {
+        "clientSecret": "",
+        "clientID": "",
+        "authority": "",
+        "callbackURL": "",
+        "appcallbackURL": "",
+        "appURI": ""
+    },
+    "passport": {
+        "identityMetadata": "",
+        "clientID": "",
+        "issuer": "",
+        "audience": "",
+        "loggingLevel": "",
+        "passReqToCallback": false
+    },
+    "SERVER_PORT": "",
+    "SERVER_PORT_HTTPS": "",
+    "sessionsecret": "",
+    "groups": {
+        "Admin": {
+            "AADName": "",
+            "AADID": "",
+            "rank": 0
+        },
+        "Finance": {
+            "AADName": "",
+            "AADID": "",
+            "rank": 1
+        },
+        "Technician": {
+            "AADName": "",
+            "AADID": "",
+            "rank": 2
+        },
+        "General": {
+            "AADName": "",
+            "AADID": "",
+            "rank": 3
+        }
+    },
+    "db":{
+        "MYSQL_HOST": "",
+        "MYSQL_USER": "",
+        "MYSQL_PASSWORD": "",
+        "MYSQL_DB": ""
+    },
+	"server_address": ""
+}

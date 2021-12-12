@@ -18,8 +18,6 @@ function items_get(app) {
 			let model = typecheck.checkInt(req.body.model);
 			let checked_in = + typecheck.checkBool(req.body.checked_in);
 			let received = + typecheck.checkBool(req.body.received);
-		
-
 			for(var param of [orderid, cost, price, typeID, model, checked_in, received]){
 				if(!param || param === undefined){
 					res.sendStatus(400);
@@ -44,7 +42,6 @@ function items_get(app) {
 					console.error(err);
 					res.sendStatus(500);
 				});	
-			res.sendStatus(200);
 		}
 	});
 };

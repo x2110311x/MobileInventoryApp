@@ -13,8 +13,8 @@ function orders_put(app) {
 		let orderdate = typecheck.checkString(req.body.date);
 		let cost = typecheck.checkFloat(req.body.cost);
 		queries.orders.add(user, pass, orderNumber, vendorID, orderdate, cost)
-			.then((rows) =>{
-				res.status(200).send(rows[0]);
+			.then((row) =>{
+				res.status(200).send(String(row));
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

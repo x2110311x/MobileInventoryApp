@@ -49,10 +49,10 @@ module.exports = {
 			connect(user, pass)
 				.then(conn => {
 					let count = 0;
-					let query = 'INSERT INTO items(order_number,description,cost,price,typeid,model) VALUES ' ;
+					let query = 'INSERT INTO items(order_number,description,cost,price,typeid,model,received,checked_out) VALUES ' ;
 					for (var item of items){
-						if(count == 0) query += `(${orderNumber},"${item.description}",${item.cost},${item.price},${item.type},${item.model})`;
-						else query += `, (${orderNumber},"${item.description}",${item.cost},${item.price},${item.type},${item.model})`;
+						if(count == 0) query += `(${orderNumber},"${item.description}",${item.cost},${item.price},${item.type},${item.model},0,0)`;
+						else query += `, (${orderNumber},"${item.description}",${item.cost},${item.price},${item.type},${item.model},0,0)`;
 						count+=1;
 					}					
 					query += `; UPDATE orders SET number_of_items = number_of_items + ${count};`;

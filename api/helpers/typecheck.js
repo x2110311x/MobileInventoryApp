@@ -18,6 +18,10 @@ module.exports = {
 			return retVar;
 		}
 	},
+	checkString: function(str){
+		if(!str) return;
+		return str.toString();
+	},
 	checkBool: function(str){
 		if(!str) return;
 		if(str.toString().toLowerCase() == 'true'){

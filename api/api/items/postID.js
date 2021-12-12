@@ -62,30 +62,46 @@ function items_post(app) {
 			type: 'integer'
 		}
 		*/
-		let received = + typecheck.checkBool(req.body.received);
-		let checked_out = + typecheck.checkBool(req.body.checked_out);
-		let model = typecheck.checkInt(req.body.model);
-		let typeID = typecheck.checkInt(req.body.typeID);
+		let received = (req.query.received != undefined ? typecheck.checkBool(req.query.received) : false);
+		let checkedout = (req.query.checkedout != undefined ? typecheck.checkBool(req.query.checkedout) : false);
+		let serial = typecheck.checkString(req.body.serial_number);
 		let user = req.uid;
 		let pass = req.auth;
-		let orderNumber = req.body.orderNumber;
-		let desc = req.body.desc;
-		let cost = typecheck.checkFloat(req.body.cost);
-		let price = typecheck.checkFloat(req.body.price);
+
 		let itemid = typecheck.checkInt(req.params.itemid);
 		
-		for(var param of [orderNumber, cost, price, typeID, model, checked_out, received, itemid]){
-			if(!param || param === undefined){
-				res.sendStatus(400);
-				return;
-			}
+		if(req.query.received != undefined){
+			queries.items.receive(user, pass, itemid, received)
+				.then(() =>{
+					res.sendStatus(200);
+				}).catch(err => {
+					console.error(err);
+					res.sendStatus(500);
+				});
+		} else if(req.query.checkedout != undefined){
+			queries.items.checkInOut(user, pass, itemid, checkedout)
+				.then(() =>{
+					res.sendStatus(200);
+				}).catch(err => {
+					console.error(err);
+					res.sendStatus(500);
+				});
+		} else if (req.query.serial_number != undefined){
+			queries.items.updateSerial(user, pass, itemid, serial)
+				.then(() =>{
+					res.sendStatus(200);
+				}).catch(err => {
+					console.error(err);
+					res.sendStatus(500);
+				});
 		}
-		queries.items.update(user, pass, itemid, orderNumber, desc, cost, price, typeID, model, checked_out, received)
+
+		/*queries.items.update(user, pass, itemid, orderNumber, desc, cost, price, typeID, model, checked_out, received)
 			.then(() =>{
 				res.sendStatus(200);
 			}).catch(err => {
 				console.error(err);
 				res.sendStatus(500);
-			});
+			});*/
 	});
 };

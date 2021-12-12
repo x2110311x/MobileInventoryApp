@@ -108,4 +108,54 @@ module.exports = {
 				});
 		});
 	},
+	updateSerial:function(user, pass, id , serial){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'UPDATE Items SET serial_number = ' + conn.escape(serial) + ' WHERE id = ' + conn.escape(id);
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err) => {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
+	checkInOut:function(user, pass, id, checkedout){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					checkedout = checkedout == true ? 1 : 0;
+					let query = 'UPDATE Items SET checked_out = ' + conn.escape(checkedout) + ' WHERE id = ' + conn.escape(id);
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err) => {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
+	receive:function(user, pass, id, received){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					received = received == true ? 1 : 0;
+					let query = 'UPDATE Items SET received = ' + conn.escape(received) + ' WHERE id = ' + conn.escape(id);
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err) => {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	}
 };

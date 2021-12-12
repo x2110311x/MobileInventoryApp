@@ -26,6 +26,22 @@ module.exports = {
 				});
 		});
 	},
+	getNotReceived:function(user, pass){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'SELECT * FROM items WHERE received=0 AND checked_out=0';
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err)=> {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
 	getReceived:function(user, pass){
 		return new Promise((resolve, reject) => {
 			connect(user, pass)

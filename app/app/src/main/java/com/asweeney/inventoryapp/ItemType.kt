@@ -8,4 +8,7 @@ data class ItemType(
     override fun toString(): String {
         return type_name
     }
+    fun toInt(): Int{
+        return typeid
+    }
 }

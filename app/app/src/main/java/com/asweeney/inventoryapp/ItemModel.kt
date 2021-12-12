@@ -8,4 +8,7 @@ data class ItemModel(
     override fun toString(): String {
         return name
     }
+    fun toInt(): Int{
+        return id
+    }
 }

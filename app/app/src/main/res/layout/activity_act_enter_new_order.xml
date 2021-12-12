@@ -22,7 +22,7 @@
         tools:ignore="TextContrastCheck" />
 
     <DatePicker
-        android:id="@+id/datePicker1"
+        android:id="@+id/datePicker"
         android:layout_width="327dp"
         android:layout_height="135dp"
         android:calendarViewShown="false"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/lbl_items"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker1"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

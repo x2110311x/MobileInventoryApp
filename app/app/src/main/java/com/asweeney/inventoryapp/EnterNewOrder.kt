@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -18,11 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import com.google.gson.JsonObject
+
+import com.google.gson.JsonSerializationContext
+
+import com.google.gson.JsonElement
+
+
+
 
 class EnterNewOrder : AppCompatActivity() {
     private val orderItems = ArrayList<OrderItem>()
@@ -149,7 +160,66 @@ class EnterNewOrder : AppCompatActivity() {
     }
 
     private fun saveOrder(){
-        if(checkAllFields(this)) Toast.makeText(applicationContext, "Save Order", Toast.LENGTH_SHORT).show()
+        if(checkAllFields(this)){
+            runBlocking {
+                val order = addOrder()
+                saveItems(order)
+            }
+            finish()
+        }
+    }
+
+    private fun addOrder(): String{
+        val datePicker = findViewById<DatePicker>(R.id.datePicker)
+        val spnVendor: Spinner = findViewById(R.id.spn_Vendor)
+        var orderID: String? = null
+
+        var vendor = spnVendor.selectedItem as Vendor
+        var date = "${datePicker.year}-${datePicker.month + 1}-${datePicker.dayOfMonth}"
+        var cost = getTotalCost()
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val sharedPref =
+                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+            val accesstoken = sharedPref.getString("access_token", "NONE")
+            val idtoken = sharedPref.getString("id_token", "NONE")
+            val baseUrl = resources.getString(R.string.api_baseurl)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            orderID = api.addOrder(orderNumber!!, vendor.id, date, cost)
+        }
+        runBlocking {
+            job.join()
+        }
+        return orderID!!
+    }
+
+    private fun saveItems(order: String){
+        val gsonBuilder = GsonBuilder()
+        val serializer: JsonSerializer<OrderItem> =
+            JsonSerializer<OrderItem> { src, _, _ ->
+                val jsonItem = JsonObject()
+                jsonItem.addProperty("description", src.description)
+                jsonItem.addProperty("cost", src.cost)
+                jsonItem.addProperty("price", src.price)
+                jsonItem.addProperty("model", src.model.id)
+                jsonItem.addProperty("type", src.type.typeid)
+                jsonItem.addProperty("checked_in", 0)
+                jsonItem.addProperty("received", 0)
+                jsonItem
+            }
+        gsonBuilder.registerTypeAdapter(OrderItem::class.java, serializer)
+        var json = gsonBuilder.create().toJson(orderItems)
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val sharedPref =
+                getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+            val accesstoken = sharedPref.getString("access_token", "NONE")
+            val idtoken = sharedPref.getString("id_token", "NONE")
+            val baseUrl = resources.getString(R.string.api_baseurl)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            api.addOrderItems(order.toInt(), json)
+        }
+        runBlocking {
+            job.join()
+        }
     }
 
     private fun getOrderNumber(): String {
@@ -192,6 +262,14 @@ class EnterNewOrder : AppCompatActivity() {
 
     private fun checkAllFields(ctx: Context):Boolean{
         return checkOrderNumber() && checkVendor() && checkItems(ctx)
+    }
+
+    private fun getTotalCost(): Double {
+        var totalCost = 0.00
+        for(item in orderItems){
+            totalCost += item.toDouble()
+        }
+        return totalCost
     }
 }
 

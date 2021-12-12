@@ -15,7 +15,7 @@ class InventoryItem(
     @Suppress("kotlin:S117")
     val serial_number: String?,
     val model: String,
-    val typeid: String
+    val type: String
 ){
     val name: String
         get() = getNameFromDesc(description)

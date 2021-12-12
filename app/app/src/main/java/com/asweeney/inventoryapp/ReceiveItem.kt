@@ -183,7 +183,7 @@ class ReceiveItem : AppCompatActivity() {
         if(invItem.id != 0 ) {
             val txtItemID: TextView = findViewById(R.id.txt_itemDetails)
             txtItemID.text = "Name: ${invItem.name}\n" +
-                    "Type: ${invItem.typeid}\n" +
+                    "Type: ${invItem.type}\n" +
                     "Model: ${invItem.model}\n" +
                     "ID: ${invItem.id}"
         }

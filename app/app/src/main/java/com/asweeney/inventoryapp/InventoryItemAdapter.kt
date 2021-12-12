@@ -31,7 +31,7 @@ class InventoryItemAdapter(private val inventoryItems: List<InventoryItem>, priv
         val currentItem =  inventoryItems[position]
 
         holder.name.text = currentItem.name
-        holder.desc.text = "${currentItem.typeid} - ${currentItem.model}"
+        holder.desc.text = "${currentItem.type} - ${currentItem.model}"
         holder.id.text = "#${currentItem.id}"
         holder.serial.text = "Serial Number: ${currentItem.serial_number}"
         holder.detailsBtn.setOnClickListener {

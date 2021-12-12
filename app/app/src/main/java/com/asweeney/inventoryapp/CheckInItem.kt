@@ -87,7 +87,7 @@ class CheckInItem : AppCompatActivity() {
                 invItem = Gson().fromJson(item, InventoryItem::class.java)
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
                     txtItemID.text = "Name: ${invItem!!.name}\n" +
-                            "Type: ${invItem!!.typeid}\n" +
+                            "Type: ${invItem!!.type}\n" +
                             "Model: ${invItem!!.model}\n" +
                             "Serial Number: ${invItem!!.serial_number}\n" +
                             "ID: ${invItem!!.id}"

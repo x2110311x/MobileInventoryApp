@@ -12,7 +12,7 @@ BEGIN
 		ROLLBACK;
 	START TRANSACTION;
 		INSERT INTO items(order_number,description,cost,price,typeid,model,received,checked_out) VALUES(oNumber,iDesc,iCost,iPrice,iTypeID,iModel,0,0);
-		UPDATE orders SET number_of_items = number_of_items + 1;
+		UPDATE orders SET number_of_items = number_of_items + 1 WHERE id = oNumber;
 	COMMIT;
 END;;
 DELIMITER ;

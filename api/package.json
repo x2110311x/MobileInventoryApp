@@ -38,7 +38,8 @@
     "qrcode": "^1.5.0",
 	"canvas": "2.8.0",
     "swagger-autogen": "^2.12.6",
-    "swagger-ui-express": "^4.2.0"
+    "swagger-ui-express": "^4.2.0",
+	"json-schema": ">=0.4.0"
   },
   "devDependencies": {
     "eslint": "^8.2.0"

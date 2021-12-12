@@ -216,4 +216,21 @@ class APIClient(private val accesstoken: String,
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
         }
     }
+
+    fun checkInItem(itemID: Int, reason: String){
+        val body = FormBody.Builder()
+            .add("checked_out", "false")
+            .add("reason", reason)
+            .build()
+        val request = okhttp3.Request.Builder()
+            .url(baseurl + "api/items/$itemID")
+            .header("Authorization", "Bearer $idtoken")
+            .header("X-Auth", accesstoken)
+            .post(body)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+        }
+    }
+
 }

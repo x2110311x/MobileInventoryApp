@@ -8,13 +8,13 @@ function orders_put(app) {
 		// #swagger.summary = 'Add a new order'
 		let user = req.uid;
 		let pass = req.auth;
-		let orderNumber = req.body.orderNumber;
-		let vendorID = typecheck.checkInt(req.body.vendorid);
-		let orderdate = typecheck.checkInt(req.body.date);
+		let orderNumber = typecheck.checkString(req.body.orderNumber);
+		let vendorID = typecheck.checkInt(req.body.vendor);
+		let orderdate = typecheck.checkString(req.body.date);
 		let cost = typecheck.checkFloat(req.body.cost);
 		queries.orders.add(user, pass, orderNumber, vendorID, orderdate, cost)
-			.then((rows) =>{
-				res.status(200).send(rows[0]);
+			.then((row) =>{
+				res.status(200).send(String(row));
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

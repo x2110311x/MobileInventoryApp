@@ -30,7 +30,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'SELECT * FROM items WHERE received=0 AND checked_out=0';
+					let query = 'SELECT i.id, i.order_number, i.description, i.received, i.checked_out, ' +
+						'i.cost, i.price, t.type_name as type, m.name as model, i.serial_number ' +
+						'FROM items as i, itemtypes as t, models as m ' +
+						'WHERE i.typeid = m.typeid AND i.model = m.id AND received=0 AND checked_out=0';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);
@@ -46,7 +49,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'SELECT * FROM items WHERE received=1 AND checked_out=0';
+					let query = 'SELECT i.id, i.order_number, i.description, i.received, i.checked_out, ' +
+						'i.cost, i.price, t.type_name as type, m.name as model, i.serial_number ' +
+						'FROM items as i, itemtypes as t, models as m ' +
+						'WHERE i.typeid = m.typeid AND i.model = m.id AND received=1 AND checked_out=0';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);
@@ -65,7 +71,7 @@ module.exports = {
 					let query = 'SELECT i.id, i.order_number, i.description, i.serial_number, t.type_name as type, m.name as model, ' +
 					'c.name as company, CONCAT(u.first_name, " ",u.last_name) as user, ui.ticket ' +
 					'FROM items as i, useditems as ui, companies as c, companyusers as u, itemtypes as t, models as m ' +
-					'WHERE checked_out=1 AND ui.companyid = c.id AND ui.item=i.id';
+					'WHERE checked_out=1 AND ui.companyid = c.id AND ui.item=i.id AND i.model = m.id';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);
@@ -81,7 +87,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'SELECT * FROM items WHERE id = ' + conn.escape(id);
+					let query = 'SELECT i.id, i.order_number, i.description, i.received, i.checked_out, ' +
+						'i.cost, i.price, t.type_name as type, m.name as model, i.serial_number ' +
+						'FROM items as i, itemtypes as t, models as m ' +
+						'WHERE i.typeid = m.typeid AND i.model = m.id AND i.id = ' + conn.escape(id);
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows[0]);

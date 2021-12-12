@@ -38,11 +38,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'CALL addOrder(' + conn.escape(ordernum) + ',' + conn.escape(vendorid) + ',' + conn.escape(orderdate) + 
-					',' + conn.escape(cost) + '); SELECT LAST_INSERT_ID();';
+					let query = 'CALL addOrder(' + conn.escape(ordernum) + ',' + conn.escape(vendorid) + ',' + conn.escape(orderdate) + ',' + conn.escape(cost) + '); SELECT LAST_INSERT_ID() as id;';
 					conn.query(query)
 						.then((rows) =>{
-							return resolve(rows);
+							return resolve(rows[1][0].id);
 						}).catch((err)=> {
 							return reject(err);
 						});

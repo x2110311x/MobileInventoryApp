@@ -105,6 +105,25 @@ CREATE TABLE `itemtypes` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='Allows user definable item types to be marked';
 
 --
+-- Table structure for table `useditems`
+--
+
+DROP TABLE IF EXISTS `useditems`;
+CREATE TABLE `useditems` (
+  `item` int(10) unsigned NOT NULL,
+  `companyid` int(10) unsigned DEFAULT NULL COMMENT 'Company the item was assigned to, if applicable',
+  `companyUser` int(10) unsigned DEFAULT NULL COMMENT 'Companyuser the item was assigned to, if applicable',
+  `ticket` int(10) unsigned DEFAULT NULL COMMENT 'Ticket this item is used in',
+  PRIMARY KEY (`item`),
+  KEY `fk_useditems_company` (`companyid`),
+  KEY `fk_useditems_item` (`item`),
+  KEY `fk_useditems_user` (`companyUser`),
+  CONSTRAINT `fk_useditems_company` FOREIGN KEY (`companyid`) REFERENCES `companies` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_useditems_item` FOREIGN KEY (`item`) REFERENCES `items` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_useditems_user` FOREIGN KEY (`companyUser`) REFERENCES `companyusers` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Stores checked out items';
+
+--
 -- Table structure for table `models`
 --
 

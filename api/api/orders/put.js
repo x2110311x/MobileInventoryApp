@@ -11,10 +11,10 @@ function orders_put(app) {
 		let orderNumber = req.body.orderNumber;
 		let vendorID = typecheck.checkInt(req.body.vendorid);
 		let orderdate = typecheck.checkInt(req.body.date);
-		let cost = typecheck.checkFloat(req.body.costs);
+		let cost = typecheck.checkFloat(req.body.cost);
 		queries.orders.add(user, pass, orderNumber, vendorID, orderdate, cost)
-			.then(() =>{
-				res.sendStatus(200);
+			.then((rows) =>{
+				res.status(200).send(rows[0]);
 			}).catch((err)=> {
 				console.error(err);
 				res.status(500).send('Server Error');

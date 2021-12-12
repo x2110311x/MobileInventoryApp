@@ -38,7 +38,8 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'CALL addOrder(' + conn.escape(ordernum) + ',' + conn.escape(vendorid) + ',' + conn.escape(orderdate) + ',' + conn.escape(cost) + ')';
+					let query = 'CALL addOrder(' + conn.escape(ordernum) + ',' + conn.escape(vendorid) + ',' + conn.escape(orderdate) + 
+					',' + conn.escape(cost) + '); SELECT LAST_INSERT_ID();';
 					conn.query(query)
 						.then((rows) =>{
 							return resolve(rows);

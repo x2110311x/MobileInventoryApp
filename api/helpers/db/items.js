@@ -177,7 +177,7 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					received = received == true ? 1 : 0;
+					received = received ? 1 : 0;
 					let query = 'UPDATE items SET received = ' + conn.escape(received) + ' WHERE id = ' + conn.escape(id);
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{

@@ -1,6 +1,5 @@
 /*jshint esversion: 6 */
 var express = require('express');
-var http = require('http');
 var https = require('https');
 var passport = require('passport');
 var BearerStrategy = require('passport-azure-ad').BearerStrategy;
@@ -10,15 +9,6 @@ const fs = require('fs');
 var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 var app = express();
-var httpserv = express();
-httpserv.use((req, res) => {
-	if (req.headers.host === 'x2110311x.ddns.net')
-		return res.redirect(301, 'https://x2110311x.ddns.net:4443');
-	if (req.headers['x-forwarded-proto'] !== 'https')
-		return res.redirect('https://' + 'x2110311x.ddns.net:4443' + req.url) ;
-	else
-		return res.sendStatus(405);
-});
 
 const config = require('./config.json');
   
@@ -56,8 +46,6 @@ app.all('*', function (req, res) {
 
 
 var credentials = {key: privateKey, cert: certificate};
-var httpServer = http.createServer(httpserv);
 var httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(config.SERVER_PORT);
 httpsServer.listen(config.SERVER_PORT_HTTPS);

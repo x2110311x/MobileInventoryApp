@@ -1,11 +1,13 @@
 package com.asweeney.inventoryapp
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +21,14 @@ class MainPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        registerButtons()
-        val source = intent.getStringExtra("Source")
-        if (source != "from LoginCallback") checkLogin()
+
+        if (RootDetection.check(applicationContext)) {
+            forceCloseApp(this)
+        } else {
+            registerButtons()
+            val source = intent.getStringExtra("Source")
+            if (source != "from LoginCallback") checkLogin()
+        }
     }
 
     private fun checkLogin(){
@@ -90,5 +97,16 @@ class MainPage : AppCompatActivity() {
         } catch(e: Exception) {
             false
         }
+    }
+
+    private fun forceCloseApp(ctx: Context) {
+        val alert = AlertDialog.Builder(ctx)
+            .setMessage("This application cannot be run on rooted devices")
+            .setPositiveButton("Proceed") { _, _ ->
+                finish()
+            }
+            .create()
+        alert.setTitle("Root detected")
+        alert.show()
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -13,9 +14,11 @@ import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
+import androidx.print.PrintHelper
 
 class ReceiveItem : AppCompatActivity() {
     private var labelPrinted = false
+    private var invItem: InventoryItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_receive_item)
@@ -27,25 +30,58 @@ class ReceiveItem : AppCompatActivity() {
     }
 
     private fun receiveItem(ctx: Context){
-        if(!labelPrinted){
-            val alert = AlertDialog.Builder(ctx)
-                .setMessage("Do you want to print a label before receiving?")
-                .setCancelable(true)
-                .setPositiveButton("Yes") { _, _ ->
-                    printLabel()
+        if(checkFields()) {
+            if (!labelPrinted) {
+                val alert = AlertDialog.Builder(ctx)
+                    .setMessage("Do you want to print a label before receiving?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes") { _, _ ->
+                        printLabel(ctx)
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.cancel()
+                    }
+                    .create()
+                alert.setTitle("No Label Printed")
+                alert.show()
+            } else {
+                val job = CoroutineScope(Dispatchers.IO).launch {
+                    val sharedPref =
+                        getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+                    val accesstoken = sharedPref.getString("access_token", "NONE")
+                    val idtoken = sharedPref.getString("id_token", "NONE")
+                    val baseUrl = resources.getString(R.string.api_baseurl)
+                    val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                    api.receiveItem(invItem!!.id)
                 }
-                .setNegativeButton("No") { dialog, _ ->
-                    dialog.cancel()
+                runBlocking {
+                    job.join()
                 }
-                .create()
-            alert.setTitle("No Label Printed")
-            alert.show()
+                finish()
+            }
         }
-        Toast.makeText(applicationContext, "Receive Item", Toast.LENGTH_SHORT).show()
     }
 
-    private fun printLabel(){
-        Toast.makeText(applicationContext, "Print Label", Toast.LENGTH_SHORT).show()
+    private fun printLabel(ctx: Context){
+        setSerial()
+        val spnItems: Spinner = findViewById(R.id.spn_waitingItems)
+        val selectedObject = spnItems.selectedItem as InventoryItem
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+            val accesstoken = sharedPref.getString("access_token", "NONE")
+            val idtoken = sharedPref.getString("id_token", "NONE")
+            val baseUrl = resources.getString(R.string.api_baseurl)
+            val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+            val bitmap = api.getItemQRCode(selectedObject.id)
+            PrintHelper(ctx).apply {
+                scaleMode = PrintHelper.SCALE_MODE_FILL
+            }.also { printHelper ->
+                printHelper.printBitmap("QR Code", bitmap)
+            }
+        }
+        runBlocking {
+            job.join()
+        }
         labelPrinted = true
     }
 
@@ -105,7 +141,8 @@ class ReceiveItem : AppCompatActivity() {
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
                 val selectedObject = spnItems.selectedItem as InventoryItem
-                CoroutineScope(Dispatchers.IO).launch { loadItem(selectedObject) }
+                invItem = selectedObject
+                CoroutineScope(Dispatchers.IO).launch { loadItem(invItem!!) }
             }
         }
 
@@ -116,7 +153,7 @@ class ReceiveItem : AppCompatActivity() {
             receiveItem(this)
         }
         findViewById<Button>(R.id.btn_printLabel).setOnClickListener {
-            printLabel()
+            printLabel(this)
         }
     }
 
@@ -129,7 +166,7 @@ class ReceiveItem : AppCompatActivity() {
                 val idtoken = sharedPref.getString("id_token", "NONE")
                 val baseUrl = resources.getString(R.string.api_baseurl)
                 val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
-                val items = api.getReceivedItems()
+                val items = api.getNotReceivedItems()
 
                 val listType = object : TypeToken<ArrayList<InventoryItem?>?>() {}.type
                 list = Gson().fromJson(items, listType)
@@ -148,9 +185,47 @@ class ReceiveItem : AppCompatActivity() {
             txtItemID.text = "Name: ${invItem.name}\n" +
                     "Type: ${invItem.typeid}\n" +
                     "Model: ${invItem.model}\n" +
-                    "Serial Number: ${invItem.serial_number}\n" +
                     "ID: ${invItem.id}"
         }
     }
 
+    private fun checkSerialNumber(): Boolean{
+        val serialNumField = findViewById<EditText>(R.id.txt_serialNum)
+        return if (TextUtils.isEmpty(serialNumField.text)) {
+            serialNumField.error = "Enter Serial Number first!"
+            false
+        } else true
+    }
+
+    private fun checkItem(): Boolean{
+        val spnItem: Spinner = findViewById(R.id.spn_waitingItems)
+        val item = spnItem.selectedItem as InventoryItem
+        return if (item.id == 0){
+            val view = spnItem.selectedView as TextView
+            view.error = "Please select an item"
+            false
+        } else true
+    }
+
+    private fun checkFields(): Boolean {
+        return checkItem() && checkSerialNumber()
+    }
+
+    private fun setSerial(){
+        if(checkSerialNumber()) {
+            val serialNumField = findViewById<EditText>(R.id.txt_serialNum)
+            val serialNumber = serialNumField.text.toString()
+            val job = CoroutineScope(Dispatchers.IO).launch {
+                val sharedPref = getSharedPreferences("com.asweeney.inventory.LOGIN", MODE_PRIVATE)
+                val accesstoken = sharedPref.getString("access_token", "NONE")
+                val idtoken = sharedPref.getString("id_token", "NONE")
+                val baseUrl = resources.getString(R.string.api_baseurl)
+                val api = APIClient(accesstoken!!, idtoken!!, baseUrl)
+                api.setItemSerial(invItem!!.id, serialNumber)
+            }
+            runBlocking {
+                job.join()
+            }
+        }
+    }
 }

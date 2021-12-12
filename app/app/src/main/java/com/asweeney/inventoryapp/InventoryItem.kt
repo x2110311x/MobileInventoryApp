@@ -7,10 +7,9 @@ class InventoryItem(
     @Suppress("kotlin:S117")
     val order_number: String,
     private val description: String,
+    var received: Int,
     @Suppress("kotlin:S117")
-    var received: Number,
-    @Suppress("kotlin:S117")
-    var checked_out: Number,
+    var checked_out: Int,
     val cost: Double,
     val price: Double,
     @Suppress("kotlin:S117")

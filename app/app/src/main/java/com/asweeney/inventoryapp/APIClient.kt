@@ -15,6 +15,13 @@ import okhttp3.FormBody
 class APIClient(private val accesstoken: String,
                 private val idtoken: String,
                 private val baseurl: String) {
+
+    private fun getRequest(): okhttp3.Request.Builder{
+        return okhttp3.Request.Builder()
+            .addHeader("Authorization", "Bearer $idtoken")
+            .addHeader("X-Auth", accesstoken);
+    }
+
     private val client = OkHttpClient.Builder()
         .apply { if (BuildConfig.DEBUG) ignoreAllSSLErrors() }
         .build()
@@ -37,7 +44,7 @@ class APIClient(private val accesstoken: String,
         return this
     }
     fun checkLogin() : Boolean {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "auth/loginstatus")
             .header("Authorization", "Bearer $idtoken")
             .addHeader("X-Auth", accesstoken)
@@ -50,10 +57,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getNotReceivedItems() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items?received=false")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -62,10 +67,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getReceivedItems() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items?received=true")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -74,10 +77,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getUsedItems() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items?checkedout=true")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -86,10 +87,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getVendors() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/vendors")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -98,10 +97,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getItemTypes() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/types")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -110,10 +107,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getModels(typeid: Int) : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/models?typeid=$typeid")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -122,10 +117,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getItem(itemID: Int) : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -134,10 +127,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getCompanies() : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/companies")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -146,10 +137,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getCompanyUsers(companyID: Int) : String {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/companies/$companyID/users")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -158,10 +147,8 @@ class APIClient(private val accesstoken: String,
     }
 
     fun getItemQRCode(itemID: Int) : Bitmap {
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID/qrcode")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -173,10 +160,8 @@ class APIClient(private val accesstoken: String,
         val body = FormBody.Builder()
             .add("serial_number", serial)
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .post(body)
             .build()
         client.newCall(request).execute().use { response ->
@@ -188,10 +173,8 @@ class APIClient(private val accesstoken: String,
         val body = FormBody.Builder()
             .add("received", "true")
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .post(body)
             .build()
         client.newCall(request).execute().use { response ->
@@ -206,10 +189,8 @@ class APIClient(private val accesstoken: String,
             .add("user", "$userID")
             .add("ticket", "$ticket")
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .post(body)
             .build()
         client.newCall(request).execute().use { response ->
@@ -222,10 +203,8 @@ class APIClient(private val accesstoken: String,
             .add("checked_out", "false")
             .add("reason", reason)
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/items/$itemID")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .post(body)
             .build()
         client.newCall(request).execute().use { response ->
@@ -240,10 +219,8 @@ class APIClient(private val accesstoken: String,
             .add("date", date)
             .add("cost", cost.toString())
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/orders")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .put(body)
             .build()
         client.newCall(request).execute().use { response ->
@@ -256,10 +233,8 @@ class APIClient(private val accesstoken: String,
         val body = FormBody.Builder()
             .add("items", items)
             .build()
-        val request = okhttp3.Request.Builder()
+        val request = getRequest()
             .url(baseurl + "api/orders/$orderID/items")
-            .header("Authorization", "Bearer $idtoken")
-            .header("X-Auth", accesstoken)
             .put(body)
             .build()
         client.newCall(request).execute().use { response ->

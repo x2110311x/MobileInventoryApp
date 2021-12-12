@@ -58,7 +58,7 @@ function createQR(row){
 			`Model: ${row.model}`;
 	
 	ctx.fillStyle = 'black';
-	ctx.fillText(textDetails, 15, 280);
+	ctx.fillText(textDetails, 15, 300);
 	ctx.drawImage(qrCanvas, 0, 0);
 	
 	return canvas.toBuffer();

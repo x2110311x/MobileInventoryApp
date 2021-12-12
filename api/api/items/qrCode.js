@@ -54,7 +54,7 @@ function createQR(row){
 	qr.toCanvas(qrCanvas, data);
 	ctx.font = '16pt Open Sans';
 	var textDetails = `Item ID: ${row.id}\n` +
-			`Serial Number: ${row.serial_number}\n`+
+			`S/N: ${row.serial_number}\n`+
 			`Model: ${row.model}`;
 	
 	ctx.fillStyle = 'black';

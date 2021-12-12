@@ -62,15 +62,17 @@ function items_post(app) {
 			type: 'integer'
 		}
 		*/
-		let received = (req.query.received != undefined ? typecheck.checkBool(req.query.received) : false);
-		let checkedout = (req.query.checkedout != undefined ? typecheck.checkBool(req.query.checkedout) : false);
+		let received = (req.body.received != undefined ? typecheck.checkBool(req.body.received) : false);
+		let checkedout = (req.body.checkedout != undefined ? typecheck.checkBool(req.body.checkedout) : false);
 		let serial = typecheck.checkString(req.body.serial_number);
 		let user = req.uid;
 		let pass = req.auth;
 
 		let itemid = typecheck.checkInt(req.params.itemid);
+		console.log(req);
 		
-		if(req.query.received != undefined){
+		if(req.body.received != undefined){
+			console.log('receive');
 			queries.items.receive(user, pass, itemid, received)
 				.then(() =>{
 					res.sendStatus(200);
@@ -78,7 +80,8 @@ function items_post(app) {
 					console.error(err);
 					res.sendStatus(500);
 				});
-		} else if(req.query.checkedout != undefined){
+		} else if(req.body.checkedout != undefined){
+			console.log('check');
 			queries.items.checkInOut(user, pass, itemid, checkedout)
 				.then(() =>{
 					res.sendStatus(200);
@@ -86,7 +89,8 @@ function items_post(app) {
 					console.error(err);
 					res.sendStatus(500);
 				});
-		} else if (req.query.serial_number != undefined){
+		} else if (req.body.serial_number != undefined){
+			console.log('serial');
 			queries.items.updateSerial(user, pass, itemid, serial)
 				.then(() =>{
 					res.sendStatus(200);
@@ -94,6 +98,8 @@ function items_post(app) {
 					console.error(err);
 					res.sendStatus(500);
 				});
+		} else{
+			res.sendStatus(400);
 		}
 
 		/*queries.items.update(user, pass, itemid, orderNumber, desc, cost, price, typeID, model, checked_out, received)

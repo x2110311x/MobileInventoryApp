@@ -15,8 +15,6 @@ class InventoryItemAdapter(private val inventoryItems: List<InventoryItem>, priv
         val desc: TextView = itemView.findViewById(R.id.txt_item_details)
         val id: TextView = itemView.findViewById(R.id.txt_item_id)
         val serial: TextView = itemView.findViewById(R.id.txt_item_serial)
-        val detailsBtn: Button = itemView.findViewById(R.id.btn_itemDetails)
-        val checkOutBtn: Button = itemView.findViewById(R.id.btn_itemCheckOut)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InventoryViewHolder {
@@ -34,12 +32,6 @@ class InventoryItemAdapter(private val inventoryItems: List<InventoryItem>, priv
         holder.desc.text = "${currentItem.type} - ${currentItem.model}"
         holder.id.text = "#${currentItem.id}"
         holder.serial.text = "Serial Number: ${currentItem.serial_number}"
-        holder.detailsBtn.setOnClickListener {
-            Toast.makeText(ctx, "Item details - ID: ${currentItem.id}", Toast.LENGTH_SHORT).show()
-        }
-        holder.checkOutBtn.setOnClickListener {
-            Toast.makeText(ctx, "Check Out Item - ID: ${currentItem.id}", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun getItemCount() = inventoryItems.size

@@ -19,7 +19,7 @@ var bearerStrategy = new BearerStrategy(config.passport,
 	}
 );
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require('express-session')({ secret: config.sessionsecret, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());

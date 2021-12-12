@@ -102,6 +102,7 @@ class MainPage : AppCompatActivity() {
     private fun forceCloseApp(ctx: Context) {
         val alert = AlertDialog.Builder(ctx)
             .setMessage("This application cannot be run on rooted devices")
+            .setCancelable(false)
             .setPositiveButton("Proceed") { _, _ ->
                 finish()
             }

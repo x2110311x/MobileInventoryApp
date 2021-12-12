@@ -97,7 +97,6 @@ class CheckOutItem : AppCompatActivity() {
                 }
             }
 
-        // finally, data bind spinner with adapter
         spnitemCompany.adapter = adapter
         }
         spnitemCompany.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

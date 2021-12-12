@@ -61,7 +61,6 @@ class CheckInItem : AppCompatActivity() {
                 .setPositiveButton("Proceed") { _, _ ->
                     scanQR()
                 }
-                // negative button text and action
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.cancel()
                 }

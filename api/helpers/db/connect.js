@@ -8,7 +8,8 @@ module.exports = function(user, pass){
 		mariadb.createConnection({
 			user: user,
 			password: pass,
-			database: config.db.MYSQL_DB
+			database: config.db.MYSQL_DB,
+			multipleStatements: true
 		})
 			.then(conn => {
 				return resolve(conn);

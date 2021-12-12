@@ -62,7 +62,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					let query = 'SELECT * FROM items WHERE checked_out=1';
+					let query = 'SELECT i.id, i.order_number, i.description, i.serial_number, t.type_name as type, m.name as model, ' +
+					'c.name as company, CONCAT(u.first_name, " ",u.last_name) as user, ui.ticket ' +
+					'FROM items as i, useditems as ui, companies as c, companyusers as u, itemtypes as t, models as m ' +
+					'WHERE checked_out=1 AND ui.companyid = c.id AND ui.item=i.id';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);
@@ -124,12 +127,32 @@ module.exports = {
 				});
 		});
 	},
-	checkInOut:function(user, pass, id, checkedout){
+	checkOut:function(user, pass, id, company, cUser, ticket){
 		return new Promise((resolve, reject) => {
 			connect(user, pass)
 				.then(conn => {
-					checkedout = checkedout == true ? 1 : 0;
-					let query = 'UPDATE items SET checked_out = ' + conn.escape(checkedout) + ' WHERE id = ' + conn.escape(id);
+					let query = 'UPDATE items SET checked_out = 1' + ' WHERE id = ' + conn.escape(id) + '; ' +
+						'INSERT INTO useditems(item, companyid, companyUser, ticket) VALUES(' + conn.escape(id) +', ' +
+						conn.escape(company) + ', ' + conn.escape(cUser) + ', ' + conn.escape(ticket) + ')' +
+						' ON DUPLICATE KEY UPDATE companyid=' + conn.escape(company) + ', companyUser=' + conn.escape(cUser) +
+						', ticket =' + conn.escape(ticket) + ';';
+					conn.query({typeCast: tinyToBoolean, sql:query})
+						.then((rows) =>{
+							return resolve(rows);
+						}).catch((err) => {
+							return reject(err);
+						});
+				}).catch((err)=> {
+					return reject(err);
+				});
+		});
+	},
+	checkIn:function(user, pass, id){
+		return new Promise((resolve, reject) => {
+			connect(user, pass)
+				.then(conn => {
+					let query = 'UPDATE items SET checked_out = 0' + ' WHERE id = ' + conn.escape(id) + '; ' +
+						'DELETE FROM useditems WHERE item = ' + conn.escape(id) + ';';
 					conn.query({typeCast: tinyToBoolean, sql:query})
 						.then((rows) =>{
 							return resolve(rows);

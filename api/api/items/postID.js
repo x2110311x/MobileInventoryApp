@@ -63,13 +63,12 @@ function items_post(app) {
 		}
 		*/
 		let received = (req.body.received != undefined ? typecheck.checkBool(req.body.received) : false);
-		let checkedout = (req.body.checkedout != undefined ? typecheck.checkBool(req.body.checkedout) : false);
+		let checkedout = (req.body.checked_out != undefined ? typecheck.checkBool(req.body.checked_out) : false);
 		let serial = typecheck.checkString(req.body.serial_number);
 		let user = req.uid;
 		let pass = req.auth;
 
 		let itemid = typecheck.checkInt(req.params.itemid);
-		console.log(req);
 		
 		if(req.body.received != undefined){
 			console.log('receive');
@@ -80,15 +79,34 @@ function items_post(app) {
 					console.error(err);
 					res.sendStatus(500);
 				});
-		} else if(req.body.checkedout != undefined){
-			console.log('check');
-			queries.items.checkInOut(user, pass, itemid, checkedout)
-				.then(() =>{
-					res.sendStatus(200);
-				}).catch(err => {
-					console.error(err);
-					res.sendStatus(500);
-				});
+		} else if(req.body.checked_out != undefined){
+			if(checkedout){
+				console.log('checkout');
+				console.log(req.body);
+				let company = typecheck.checkInt(req.body.company);
+				let cUser = typecheck.checkInt(req.body.user);
+				let ticket = typecheck.checkInt(req.body.ticket);
+				if(company == undefined || cUser == undefined) {
+					res.sendStatus(400);
+					return;
+				}
+				queries.items.checkOut(user, pass, itemid, company, cUser, ticket)
+					.then(() =>{
+						res.sendStatus(200);
+					}).catch(err => {
+						console.error(err);
+						res.sendStatus(500);
+					});
+			} else {
+				console.log('checkin');
+				queries.items.checkIn(user, pass, itemid)
+					.then(() =>{
+						res.sendStatus(200);
+					}).catch(err => {
+						console.error(err);
+						res.sendStatus(500);
+					});
+			}
 		} else if (req.body.serial_number != undefined){
 			console.log('serial');
 			queries.items.updateSerial(user, pass, itemid, serial)

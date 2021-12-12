@@ -52,7 +52,7 @@ function createQR(row){
 	registerFont('OpenSans-Regular.ttf', { family: 'Open Sans' });
 	var qrCanvas = createCanvas(260,260);
 	qr.toCanvas(qrCanvas, data);
-	ctx.font = '16pt Open Sans';
+	ctx.font = '12pt Open Sans';
 	var textDetails = `Item ID: ${row.id}\n` +
 			`S/N: ${row.serial_number}\n`+
 			`Model: ${row.model}`;

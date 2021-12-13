@@ -1,0 +1,1005 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Inventory App API",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "host": "undefined:8443",
+  "basePath": "",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/api/companies": {
+      "get": {
+        "tags": [],
+        "summary": "Get all companies",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [],
+        "summary": "Add a new company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "description": "Name of the company",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectwiseid",
+            "in": "body",
+            "description": "Connectwise Manage ID of the company",
+            "required": false
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/companies/{companyid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "companyid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the company to lookup"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a specific company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "connectwiseid": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "Name of the company",
+            "required": true,
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "in": "body",
+            "description": "Name of the company",
+            "required": true,
+            "type": "object"
+          },
+          {
+            "name": "connectwiseid",
+            "in": "body",
+            "description": "Connectwise Manage ID of the company",
+            "required": false
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/companies/{companyid}/users": {
+      "get": {
+        "tags": [],
+        "summary": "Get all users for a specific company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "companyid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the company to lookup users for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [],
+        "summary": "Add a new user to a specific company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "example": "any"
+                },
+                "last_name": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "First name of the user",
+            "required": true,
+            "type": "object"
+          },
+          {
+            "name": "first_name",
+            "in": "body",
+            "description": "First name of the user",
+            "required": true,
+            "type": "object"
+          },
+          {
+            "name": "last_name",
+            "in": "body",
+            "description": "Last name of the user",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/companies/{companyid}/users/{userid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific user for a specific company",
+        "description": "",
+        "parameters": [
+          {
+            "name": "companyid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the company to lookup the user"
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the user to lookup"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Edit a specific user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "example": "any"
+                },
+                "last_name": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "First name of the user",
+            "required": false,
+            "type": "object"
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the user to update"
+          },
+          {
+            "name": "first_name",
+            "in": "body",
+            "description": "First name of the user",
+            "required": false,
+            "type": "object"
+          },
+          {
+            "name": "last_name",
+            "in": "body",
+            "description": "Last name of the user",
+            "required": false
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/items": {
+      "get": {
+        "tags": [],
+        "summary": "Get all items",
+        "description": "",
+        "parameters": [
+          {
+            "name": "received",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "checkedout",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/items/{itemid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific item",
+        "description": "",
+        "parameters": [
+          {
+            "name": "itemid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the item to lookup"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a specific item",
+        "description": "",
+        "parameters": [
+          {
+            "name": "itemid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the item to update"
+          },
+          {
+            "name": "orderNumber",
+            "in": "body",
+            "description": "Order number for the order where this item was purchased",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "desc",
+            "in": "body",
+            "description": "JSON Description of item",
+            "required": false,
+            "type": "object"
+          },
+          {
+            "name": "cost",
+            "in": "body",
+            "description": "Purchase cost of the item",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "in": "body",
+            "description": "Sell price of the item",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "typeID",
+            "in": "body",
+            "description": "ID for the type of the item",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "description": "ID for the model of the item",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "checked_out",
+            "in": "body",
+            "description": "Whether the item is checked out (1 for true, 0 for false)",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "received",
+            "in": "body",
+            "description": "Whether the item has been received (1 for true, 0 for false)",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/items/{itemid}/qrcode": {
+      "get": {
+        "tags": [],
+        "summary": "Get the QR Code label for a specific item",
+        "description": "",
+        "parameters": [
+          {
+            "name": "itemid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the item to lookup"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "tags": [],
+        "summary": "Get all orders",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [],
+        "summary": "Add a new order",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "orderNumber": {
+                  "example": "any"
+                },
+                "vendor": {
+                  "example": "any"
+                },
+                "date": {
+                  "example": "any"
+                },
+                "cost": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/orders/{orderid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific order",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a specific order",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vendorid": {
+                  "example": "any"
+                },
+                "date": {
+                  "example": "any"
+                },
+                "costs": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/orders/{orderid}/items": {
+      "get": {
+        "tags": [],
+        "summary": "Get all items for a specific order",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [],
+        "summary": "Add a new item to an order",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "example": "any"
+                },
+                "desc": {
+                  "example": "any"
+                },
+                "cost": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                },
+                "typeID": {
+                  "example": "any"
+                },
+                "model": {
+                  "example": "any"
+                },
+                "checked_in": {
+                  "example": "any"
+                },
+                "received": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/vendors": {
+      "get": {
+        "tags": [],
+        "summary": "Get all vendors",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [],
+        "summary": "Add a new vendor",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "account_number": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/vendors/{vendorid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific vendor",
+        "description": "",
+        "parameters": [
+          {
+            "name": "vendorid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a vendor",
+        "description": "",
+        "parameters": [
+          {
+            "name": "vendorid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "account_number": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/models": {
+      "get": {
+        "tags": [],
+        "summary": "Get all models",
+        "description": "",
+        "parameters": [
+          {
+            "name": "typeid",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/models/{modelid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specfic model",
+        "description": "",
+        "parameters": [
+          {
+            "name": "modelid",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the model to lookup"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a specific model",
+        "description": "",
+        "parameters": [
+          {
+            "name": "modelid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "in": "path",
+            "description": "ID of the model to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "typeID",
+            "in": "body",
+            "description": "ID for the type of the model",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "body",
+            "description": "Name for the model",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/models/": {
+      "put": {
+        "tags": [],
+        "summary": "Add a new model",
+        "description": "",
+        "parameters": [
+          {
+            "name": "typeID",
+            "in": "body",
+            "description": "ID for the type of the model",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "body",
+            "description": "Name for the model",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/types": {
+      "get": {
+        "tags": [],
+        "summary": "Get all item types",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/types/{typeid}": {
+      "get": {
+        "tags": [],
+        "summary": "Get a specific item type",
+        "description": "",
+        "parameters": [
+          {
+            "name": "typeid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "Update a specific item type",
+        "description": "",
+        "parameters": [
+          {
+            "name": "typeid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "typeid": {
+                  "example": "any"
+                },
+                "name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/types/": {
+      "put": {
+        "tags": [],
+        "summary": "Add a new item type",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/callback": {
+      "get": {
+        "tags": [],
+        "summary": "Handle Azure AD OAUTH2.0 callback",
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "tags": [],
+        "summary": "Redirect to OAUTH2.0 sign in",
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/auth/appcallback": {
+      "get": {
+        "tags": [],
+        "summary": "Handle Azure AD OAUTH2.0 callback",
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/applogin": {
+      "get": {
+        "tags": [],
+        "summary": "",
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/auth/loginstatus": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/auth/tokencheck/": {
+      "get": {
+        "tags": [],
+        "summary": "Validate a token for a specific user. Used for database authentication",
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/auth/getGroups": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}
